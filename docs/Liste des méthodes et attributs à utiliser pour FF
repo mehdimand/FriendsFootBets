@@ -1,0 +1,36 @@
+Liste des méthodes et attributs à utiliser pour FFB :
+
+
+Les classes :
+	Controller
+		Attributes :
+			TournamentMap : id -> Tournament
+			MatchesMap : id (le même que sur l'API) -> Match
+			UsersMap : username -> User
+			currentUser
+			currentTournament
+			currentMatch
+			??? Date lastUpdate -> date et heure de la dernière mise à jour depuis l'API (?? voir si il n'y a pas une façon plus propre de le faire)
+		Methodes :
+			void addTournament(Tournament)
+			void addMatch(Match)
+			void addUser(User)
+			Tournament getTournament(int id)
+			Match getMatch(int id)
+			User getUser(String username)
+			User getUser(String email) -> 2 méthodes pour avoir accès à un utilisateur (la deuxième est plus pratique pour traiter le 									login je pense)
+			ArrayList<Tournament> getTournamentsForUser(User user)
+			ArrayList<Tournament> getInvitationsForUser(User user) -> liste des invitations pour des tournois
+			ArrayList<Match> getNextGames(int numberOfGames) -> affiche les prochains matchs
+			??? void updateMatchesDatabase()
+
+	User
+		Attributes:
+			
+
+
+
+
+
+
+
