@@ -3,7 +3,12 @@ package com.ffb.friendsfootbets;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +42,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,10 +159,6 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    private void updateUI(FirebaseUser user) {
-
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -173,9 +175,10 @@ public class LoginActivity extends AppCompatActivity {
 
         FirebaseUser user;
 
+        Boolean newUser;
+
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             try {
                 mAuth.signInWithEmailAndPassword(mEmail, mPassword)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -193,6 +196,8 @@ public class LoginActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         // Sign in success, update UI with the signed-in user's information
                                                         user = mAuth.getCurrentUser();
+                                                        // We send a verification email for the user
+                                                        user.sendEmailVerification();
                                                     } else {
                                                         // If sign in fails, the password is wrong
                                                         user = null;
@@ -212,16 +217,42 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             mAuthTask = null;
             showLoadingCircle(false);
+            user = mAuth.getCurrentUser();
 
-            if (user != null){
-                Toast.makeText(getApplicationContext(), "Authentication successful !!!!", Toast.LENGTH_SHORT).show();
-                // TODO : add intent to go to the next screen
-                
+            boolean verifiedMail = user != null && user.isEmailVerified();
 
-            }
+            //TODO : bug quand on vérifie l'email mais qu'on laisse les champs inchangés sur la page de login : solution oublier le mot de passe quand on revient sur l'activité login
+
+            // If the user only signs in
+            if (user != null && verifiedMail) {
+                Toast.makeText(getApplicationContext(), getString(R.string.authentication_success), Toast.LENGTH_SHORT).show();
+
+                // Explicit intent to go to the home page of the app
+                Intent mainActivityIntent = new Intent(LoginActivity.this, MainActivity.class);
+                mainActivityIntent.putExtra("user", user.getEmail());
+                startActivity(mainActivityIntent);
+
+
+            } // if the user registers (first connection to the app)
+            else if (user != null && !verifiedMail){
+                Toast.makeText(getApplicationContext(), getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                alertDialogBuilder.setMessage("An verification email has been sent to you. " +
+                        "Please validate your email before signing in.");
+                        alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)  {
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+            }// the only other case is that the password is wrong
             else {
-                Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                // TODO : faire marcher le code en dessous
+                Toast.makeText(getApplicationContext(), getString(R.string.authentication_fail), Toast.LENGTH_SHORT).show();
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
