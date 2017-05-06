@@ -214,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
             showLoadingCircle(false);
 
             if (user != null){
-                Toast.makeText(getApplicationContext(), "Authentication successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Authentication successful !!!!", Toast.LENGTH_SHORT).show();
                 // TODO : add intent to go to the next screen
                 
 
