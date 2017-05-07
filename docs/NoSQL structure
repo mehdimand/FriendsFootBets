@@ -1,0 +1,62 @@
+NoSQL structure :
+using advice from Firebase doc : https://firebase.google.com/docs/database/web/structure-data
+
+{
+	// enables to get only some information on the tournament without downloading the list of user and matches
+	"tournaments" : {
+		"t1" : {
+			"TournamentName" : "Centrale PL",
+			"TournamentAdmin" : "mehdi"
+		},
+		...
+	},
+
+	"tournamentUsers" : {
+		"t1": {
+			"usersPoints" : {
+				"mehdi" : 1000, //nombre de points
+				...
+			},
+			"invitedUsers" : {
+				"younes" : true,
+				...
+			}
+		},
+		...
+	},
+
+	"tournamentMatches" : {
+		"t1" : {
+			"matchID" : true,
+			...
+		},
+		...
+	},
+
+	// only the metadata
+	"users" : {
+		"younes" : {
+			"email" : "laabyounes@hotmail.com",
+			"name" : "Younes Laaboudi",
+			"photoURL" : "http://....."
+		},
+		...
+	}
+
+	"userFollowed" : {
+		"younes": {
+			"mehdi" : true,
+			...
+		},
+		...
+	},
+
+	"userTournament" : {
+		"mehdi": {
+			"t1" : true,
+			"t4" : true
+		},
+		...
+	}
+
+}

@@ -87,6 +87,18 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // When we come back on the activity after exiting the application, the password has to be
+        // written again
+        mPasswordView.setText("");
+
+        // We reinitialize the Firebase Authentication instance
+        mAuth.signOut();
+        mAuthTask = null;
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -165,17 +177,15 @@ public class LoginActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private String mEmail;
+        private String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+            this.mEmail = email;
+            this.mPassword = password;
         }
 
         FirebaseUser user;
-
-        Boolean newUser;
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -221,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
 
             boolean verifiedMail = user != null && user.isEmailVerified();
 
-            //TODO : bug quand on vérifie l'email mais qu'on laisse les champs inchangés sur la page de login : solution oublier le mot de passe quand on revient sur l'activité login
+            //TODO : bug quand on vérifie l'email mais qu'on laisse les champs inchangés sur la page de login : solution oublier le mot de passe quand on revient sur l'activité login ?
 
             // If the user only signs in
             if (user != null && verifiedMail) {
@@ -229,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Explicit intent to go to the home page of the app
                 Intent mainActivityIntent = new Intent(LoginActivity.this, MainActivity.class);
-                mainActivityIntent.putExtra("user", user.getEmail());
+                mainActivityIntent.putExtra("userEmail", user.getEmail());
                 startActivity(mainActivityIntent);
 
 

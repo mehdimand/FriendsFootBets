@@ -19,6 +19,7 @@ public class Tournament {
     User tournamentAdmin;
     ArrayList<Integer> matchArray;
     ArrayList<User> userArray;
+    ArrayList<User> invitedUserArray;
     HashMap<User, Integer> points;
 
     public Tournament(String tournamentName, User tournamentAdmin) {
@@ -60,6 +61,18 @@ public class Tournament {
 
     public void addUser(User user) {
         this.userArray.add(user);
+    }
+
+    public ArrayList<User> getInvitedUserArray() {
+        return invitedUserArray;
+    }
+
+    public void setInvitedUserArray(ArrayList<User> invitedUserArray) {
+        this.invitedUserArray = invitedUserArray;
+    }
+
+    public void addInvitedUser(User user) {
+        this.invitedUserArray.add(user);
     }
 
     public HashMap<User, Integer> getPoints() {
