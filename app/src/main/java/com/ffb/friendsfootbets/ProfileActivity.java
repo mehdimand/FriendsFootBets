@@ -114,7 +114,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else{
             currentUser = (User) extras.getSerializable("currentUser");
-            //This condition applies when
             userEmail = currentUser.getEmail();
         }
     }
@@ -397,10 +396,6 @@ public class ProfileActivity extends AppCompatActivity {
         } else{
             modifyProfile();
         }
-
-
-
-
     }
 
     private void modifyProfile(){
@@ -413,8 +408,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
         String name = nameView.getText().toString();
         boolean hasProfilePicture = imageView.getDrawable() != null;
-
-        uploadUserPicture(username);
+        if (hasProfilePicture){
+            uploadUserPicture(username);
+        }
 
         // Set the values in the database
         mDatabase.child("users").child(username).child("name").setValue(name);

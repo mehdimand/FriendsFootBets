@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
             // This method uses asynchronous tasks, therefore all other action after sign in can't be in
             // the onCreate method
         }else{
-            displayTournaments();
+            // In case the user attributes have changed in the database while the activity was on pause
+            controller.signIn(controller.getCurrentUser().getEmail());
         }
     }
 
