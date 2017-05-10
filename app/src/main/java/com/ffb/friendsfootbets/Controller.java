@@ -214,7 +214,9 @@ public class Controller {
 
                 currentUser.setName((String) dataSnapshot.child("name").getValue());
                 currentUser.setEmail((String) dataSnapshot.child("email").getValue());
-                currentUser.setPhotoUrl((String) dataSnapshot.child("photoURL").getValue());
+                // In some cases the profilePicture key isn't set (when no picture is chosen)
+                Object tempBoolProfilePicture = dataSnapshot.child("profilePicture").getValue();
+                currentUser.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
                 completeUserTrigger();
 
             }
