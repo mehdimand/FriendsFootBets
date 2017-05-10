@@ -1,29 +1,30 @@
 package com.ffb.friendsfootbets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Younes and Mehdi on 06/05/2017.
  */
 
-public class User {
+public class User implements Serializable{
     private String name;
     private String username;
     private String email;
     private ArrayList<String> usersFollowed;
     private ArrayList<String> tournamentsAccepted;
     private ArrayList<String> tournamentsInvited;
-    private String photoUrl;
+    private boolean profilePicture;
 
     public User(String username) {
         this.username = username;
     }
 
-    public User(String name, String username, String email, String photoUrl) {
+    public User(String name, String username, String email, boolean profilePicture) {
         this.name = name;
         this.username = username;
         this.email = email;
-        this.photoUrl = photoUrl;
+        this.profilePicture = profilePicture;
     }
 
     public String getName() {
@@ -58,12 +59,12 @@ public class User {
         this.usersFollowed = usersFollowed;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public boolean hasProfilePicture() {
+        return profilePicture;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setProfilePicture(boolean profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public ArrayList<String> getTournamentsAccepted() {
@@ -91,7 +92,7 @@ public class User {
                 ", usersFollowed=" + usersFollowed +
                 ", tournamentsAccepted=" + tournamentsAccepted +
                 ", tournamentsInvited=" + tournamentsInvited +
-                ", photoUrl='" + photoUrl + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
                 '}';
     }
 }

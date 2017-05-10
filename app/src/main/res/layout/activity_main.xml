@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.ffb.friendsfootbets.MainActivity">
 
+    <Button
+        android:id="@+id/modify_profile_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/modify_profile_prompt"
+        android:textStyle="bold"
+        android:onClick="onClick" />
+
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"

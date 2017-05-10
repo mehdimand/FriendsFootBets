@@ -38,7 +38,7 @@ using advice from Firebase doc : https://firebase.google.com/docs/database/web/s
 		"younes" : {
 			"email" : "laabyounes@hotmail.com",
 			"name" : "Younes Laaboudi",
-			"photoURL" : "http://....."
+			"profilePicture" : true
 		},
 		...
 	}
