@@ -13,4 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- URLs -->
+    <string name="competsURL">http://api.football-data.org/v1/competitions/</string>
+
 </resources>
