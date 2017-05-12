@@ -3,7 +3,12 @@ package com.ffb.friendsfootbets;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,10 +42,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -81,11 +86,24 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // When we come back on the activity after exiting the application, the password has to be
+        // written again
+        mPasswordView.setText("");
+
+        // We reinitialize the Firebase Authentication instance
+        mAuth.signOut();
+        mAuthTask = null;
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
+    //TODO bug à corriger : le premier mot de passe qu'on met est toujours incorrect
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -153,8 +171,47 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void onFirebaseSignIn(FirebaseUser user){
+        mAuthTask = null;
+        showLoadingCircle(false);
 
+        boolean verifiedMail = user != null && user.isEmailVerified();
+
+        //TODO : bug quand on vérifie l'email mais qu'on laisse les champs inchangés sur la page de login : solution oublier le mot de passe quand on revient sur l'activité login ?
+
+        // If the user only signs in
+        if (user != null && verifiedMail) {
+            Toast.makeText(getApplicationContext(), getString(R.string.authentication_success), Toast.LENGTH_SHORT).show();
+
+            // Explicit intent to go to the home page of the app
+            Intent mainActivityIntent = new Intent(LoginActivity.this, MainActivity.class);
+            mainActivityIntent.putExtra("userEmail", user.getEmail());
+            startActivity(mainActivityIntent);
+
+
+        } // if the user registers (first connection to the app)
+        else if (user != null && !verifiedMail){
+            Toast.makeText(getApplicationContext(), getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+            alertDialogBuilder.setMessage("An verification email has been sent to you. " +
+                    "Please validate your email before signing in.");
+            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)  {
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }// the only other case is that the password is wrong
+        else {
+            Toast.makeText(getApplicationContext(), getString(R.string.authentication_fail), Toast.LENGTH_SHORT).show();
+
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
+        }
     }
 
     /**
@@ -163,19 +220,18 @@ public class LoginActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private String mEmail;
+        private String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+            this.mEmail = email;
+            this.mPassword = password;
         }
 
         FirebaseUser user;
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             try {
                 mAuth.signInWithEmailAndPassword(mEmail, mPassword)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -184,8 +240,9 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     user = mAuth.getCurrentUser();
+                                    //As it is a listner, we can't use onPostExecute
+                                    onFirebaseSignIn(user);
                                 } else {
-                                    // If sign in fails, try registering the account
                                     mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
                                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                                 @Override
@@ -193,9 +250,15 @@ public class LoginActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         // Sign in success, update UI with the signed-in user's information
                                                         user = mAuth.getCurrentUser();
+                                                        // We send a verification email for the user
+                                                        user.sendEmailVerification();
+                                                        //As it is a listner, we can't use onPostExecute
+                                                        onFirebaseSignIn(user);
                                                     } else {
                                                         // If sign in fails, the password is wrong
                                                         user = null;
+                                                        //As it is a listner, we can't use onPostExecute
+                                                        onFirebaseSignIn(user);
                                                     }
                                                 }
                                             });
@@ -203,6 +266,10 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
             } catch (Exception e) {
+                System.out.println("case 2");
+                System.out.println("Email : "+mEmail);
+                System.out.println("Password : "+mPassword);
+                System.out.println(e.toString());
             }
             return true;
         }
@@ -210,21 +277,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean success) {
-            mAuthTask = null;
-            showLoadingCircle(false);
 
-            if (user != null){
-                Toast.makeText(getApplicationContext(), "Authentication successful !!!!", Toast.LENGTH_SHORT).show();
-                // TODO : add intent to go to the next screen
-                
-
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                // TODO : faire marcher le code en dessous
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
         }
 
         @Override

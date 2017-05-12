@@ -1,0 +1,63 @@
+{
+  "tournaments" : {
+    "t1" : {
+      "TournamentName" : "Centrale PL",
+      "TournamentAdmin" : "mehdi"
+    },
+    "t2" : {
+      "TournamentName" : "Centrale CL",
+      "TournamentAdmin" : "younes"
+    }
+  },
+  "tournamentUsers" : {
+    "t1" : {
+      "usersPoints" : {
+        "mehdi" : 1000
+      },
+      "invitedUsers" : {
+        "younes" : true
+      }
+    },
+    "t2" : {
+      "usersPoints" : {
+        "mehdi" : 1000,
+        "younes" : 2000
+      },
+      "invitedUsers" : null
+    }
+  },
+  "tournamentMatches" : {
+    "t1" : {
+      "matchID" : true
+    },
+    "t2" : null
+  },
+  "users" : {
+    "younes" : {
+      "email" : "laabyounes@gmail.com",
+      "name" : "Younes Laaboudi",
+      "photoURL" : null
+    },
+    "mehdi" : {
+      "email" : "mehdimand@hotmail.com",
+      "name" : "Mehdi Manadouiche",
+      "photoURL" : null
+    }
+  },
+  "userFollowed" : {
+    "younes" : {
+      "mehdi" : true
+    },
+    "mehdi": null
+  },
+  "userTournament" : {
+    "mehdi" : {
+      "t1" : true,
+      "t2" : true
+    },
+    "younes" : {
+      "t1" : false,
+      "t2" : true
+    }
+  }
+}
