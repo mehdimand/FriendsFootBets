@@ -1,7 +1,9 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.ffb.friendsfootbets.R;
 
 public class TournamentActivity extends AppCompatActivity {
 

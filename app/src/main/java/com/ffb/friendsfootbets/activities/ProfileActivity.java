@@ -1,8 +1,7 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.activities;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,11 +18,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.models.User;
+import com.ffb.friendsfootbets.adapters.UserAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +34,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,11 +42,11 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -61,6 +63,9 @@ public class ProfileActivity extends AppCompatActivity {
     private boolean messageShown = false;
     private String userEmail;
     private User currentUser;
+    private int numberFollowedUsers;
+    ArrayList<User> followedUserList;
+    private ListView followedUsersListView;
 
     private DatabaseReference mDatabase;
     private FirebaseStorage storage;
@@ -104,6 +109,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         profileFormView = findViewById(R.id.username_form);
         progressView = findViewById(R.id.modify_profile_progress);
+        followedUsersListView = (ListView) findViewById(R.id.list_followed_users);
+
 
         // Get the relevant information passed with the activity change (in the onCreate rather that
         // in the onStarted because the call to the camera can create issues)
@@ -137,15 +144,68 @@ public class ProfileActivity extends AppCompatActivity {
             messageShown = true;
         } // if the user wants to modify his profile, he cannot change his username
         else if (!firstConnection){
+            // A user that has already set his username cannot change it
             usernameView.setVisibility(View.GONE);
+            // We auto fill the form with data from the database
             nameView.setText(currentUser.getName());
+            // If the user has a profile picture, then we display it
             if (currentUser.hasProfilePicture() && !changingProfilePicture){
                 showUserPicture(currentUser.getUsername());
             }
-            // TODO : afficher la liste des utilisateurs suivis
+            // Afficher la liste des utilisateurs suivis
+            loadFollowedUsers();
+
         }
 
 
+    }
+    private void loadFollowedUsers(){
+        // We get the number of followed users in order to know when all the users have been loaded
+        numberFollowedUsers = currentUser.getUsersFollowed().size();
+        followedUserList = new ArrayList<User> ();
+
+        // We create the one time listener that will connect to the database
+        ValueEventListener usersListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get User object
+                User user = new User(dataSnapshot.getKey());
+                user.setName((String) dataSnapshot.child("name").getValue());
+                user.setEmail((String) dataSnapshot.child("email").getValue());
+                // In some cases the profilePicture key isn't set (when no picture is chosen)
+                Object tempBoolProfilePicture = dataSnapshot.child("profilePicture").getValue();
+                user.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
+                followedUserList.add(user);
+                System.out.println(followedUserList.toString());
+                followedUsersLoadedTrigger();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+
+        numberUsersLoaded = 0;
+        for (int i = 0; i < numberFollowedUsers; i++){
+            String username = currentUser.getUsersFollowed().get(i);
+            DatabaseReference userInUsersRef = mDatabase.child("users").child(username);
+            userInUsersRef.addListenerForSingleValueEvent(usersListener);
+        }
+    }
+    private int numberUsersLoaded;
+    private void followedUsersLoadedTrigger() {
+        numberUsersLoaded++;
+        if (numberUsersLoaded == numberFollowedUsers){
+            UserAdapter userAdapter = new UserAdapter(this, followedUserList);
+            followedUsersListView.setAdapter(userAdapter);
+
+
+        }
     }
 
     /**
@@ -287,7 +347,7 @@ public class ProfileActivity extends AppCompatActivity {
                     try{
                         ((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
                     }catch (ClassCastException e){
-                        ((GlideBitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
+                        ((GlideBitmapDrawable)imageView.getDrawable().getCurrent()).getBitmap().recycle(); /* without getCurrent there is a class cast exception*/
                     }
                 }
 

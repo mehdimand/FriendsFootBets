@@ -1,4 +1,4 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.models;
 
 import java.util.Date;
 import java.util.HashMap;

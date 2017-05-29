@@ -1,4 +1,4 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,20 +11,24 @@ public class Tournament {
     /* The 3 possible states for a tournament, the getState(User user) method returns the state that
      * correspond to the user.
      */
-    final static int MATCHES_FINISHED = 1;
-    final static int BETTING_FINISHED = 2;
-    final static int BETTING_ONGOING = 3;
+    public final static int MATCHES_FINISHED = 1;
+    public final static int BETTING_FINISHED = 2;
+    public final static int BETTING_ONGOING = 3;
+    public final static int INVITED = 4;
 
     String tournamentName;
-    User tournamentAdmin;
-    ArrayList<Integer> matchArray;
+    String tournamentAdminUsername;
+    ArrayList<String> matchArray;
     ArrayList<User> userArray;
     ArrayList<User> invitedUserArray;
+    int state;
     HashMap<User, Integer> points;
 
-    public Tournament(String tournamentName, User tournamentAdmin) {
+    public Tournament(){}
+
+    public Tournament(String tournamentName, String tournamentAdminUsername) {
         this.tournamentName = tournamentName;
-        this.tournamentAdmin = tournamentAdmin;
+        this.tournamentAdminUsername = tournamentAdminUsername;
     }
 
     public String getTournamentName() {
@@ -35,19 +39,19 @@ public class Tournament {
         this.tournamentName = tournamentName;
     }
 
-    public User getTournamentAdmin() {
-        return tournamentAdmin;
+    public String getTournamentAdminUsername() {
+        return tournamentAdminUsername;
     }
 
-    public void setTournamentAdmin(User tournamentAdmin) {
-        this.tournamentAdmin = tournamentAdmin;
+    public void setTournamentAdminUsername(String tournamentAdminUsername) {
+        this.tournamentAdminUsername = tournamentAdminUsername;
     }
 
-    public ArrayList<Integer> getMatchArray() {
+    public ArrayList<String> getMatchArray() {
         return matchArray;
     }
 
-    public void setMatchArray(ArrayList<Integer> matchArray) {
+    public void setMatchArray(ArrayList<String> matchArray) {
         this.matchArray = matchArray;
     }
 
@@ -91,9 +95,12 @@ public class Tournament {
         }
     }
 
-    //TODO
-    public int getState(User user){
-        return BETTING_ONGOING;
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     //TODO tri sur place de userArray
