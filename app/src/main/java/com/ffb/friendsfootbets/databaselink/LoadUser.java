@@ -1,8 +1,8 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.databaselink;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ffb.friendsfootbets.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,119 +11,40 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by Younes and Mehdi on 06/05/2017.
+ * Created by Fouad-Sams on 24/05/2017.
  */
 
-public class Controller {
-    /**
-     * A map of all the tournaments that are taking place. The key is the id of the tournament and the value is an instance of the
-     * Tournament class.
-     */
-
-    // Attributes related to the app's features
-    private HashMap<Integer, Tournament> tournamentsMap;
-    private HashMap<Integer, Match> matchesMap;
-    private HashMap<String, User> usersMap;
-    private User currentUser;
-    private Tournament currentTournament;
-    private Match currentMatch;
-    private Date lastUpdate;
-
+public class LoadUser {
     // Attributes related to database link
     private DatabaseReference mDatabase;
-    private ControllerListener listener;
+    private LoadUserListener listener;
 
-    public Controller() {
+    // Attributes related to the objects that are handled
+    private User currentUser;
+
+
+    public LoadUser() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         this.listener = null;
     }
 
-    public HashMap<Integer, Tournament> getTournamentsMap() {
-        return tournamentsMap;
-    }
-
-    public void addTournament(Integer id, Tournament tournament) {
-        this.tournamentsMap.put(id, tournament);
-    }
-
-    public HashMap<Integer, Match> getMatchesMap() {
-        return matchesMap;
-    }
-
-    public void addMatch(Integer id, Match match) {
-        this.matchesMap.put(id, match);
-    }
-
-    public HashMap<String, User> getUsersMap() {
-        return usersMap;
-    }
-
-    public void addUser(String username, User user) {
-        this.usersMap.put(username, user);
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public Tournament getCurrentTournament() {
-        return currentTournament;
-    }
-
-    public void setCurrentTournament(Tournament currentTournament) {
-        this.currentTournament = currentTournament;
-    }
-
-    public Match getCurrentMatch() {
-        return currentMatch;
-    }
-
-    public void setCurrentMatch(Match currentMatch) {
-        this.currentMatch = currentMatch;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
     // Assign the listener implementing events interface that will receive the events
-    public void setControllerListener(ControllerListener listener) {
+    public void setLoadUserListener(LoadUserListener listener) {
         this.listener = listener;
     }
 
-    // TODO
-    public ArrayList<Tournament> getTournamentsForUser(User user){
-
-        return null;
-    }
-
-    // TODO
-    public ArrayList<Tournament> getInvitationsForUser(User user){
-        return null;
-    }
-
-    // TODO
-    public ArrayList<Match> getNextGames(int numberOfGames){
-        return null;
-    }
-
-    // TODO
-    public void updateMatchesDatabase(){
-
+    /*
+     * We implement a listener in order to get back to the initial activity after the data from the
+     * database is loaded.
+     */
+    public interface LoadUserListener {
+        // This trigger will be used every time we need to get a unique user
+        public void onLoadedDataForUser(User user);
+        public void userNotFound();
     }
 
     /*
@@ -154,7 +75,7 @@ public class Controller {
                     currentUser = null;
                     // We directly call the method in the activity without further access to the database
                     if (listener != null) {
-                        listener.onUserLoaded(currentUser);
+                        listener.userNotFound();
                     }
 
                 }
@@ -178,21 +99,12 @@ public class Controller {
 
         // The third time this method is called we can trigger onUserLoaded to enable the activity
         // to resume
-        if (completeUserCount == 3 && listener != null)
-            listener.onUserLoaded(currentUser);
+        if (completeUserCount == 3 && listener != null){
+            listener.onLoadedDataForUser(currentUser);
+        }
+
     }
 
-    // TODO
-    /*
-     * This method gets from the database a preview of a User instance given his username.
-     * It will only get the name, email and photo URL from the database.
-     * This method is needed because the data concerning one user is located in different tables in
-     * the NoSQL database.
-     */
-    public User getPreviewUserFromDatabase(String username){
-        return null;
-    }
-    // TODO
     /*
      * This method gets from the database a User instance given his username.
      * This method is needed because the data concerning one user is located in different tables in
@@ -297,13 +209,8 @@ public class Controller {
         userTournamentRef.addListenerForSingleValueEvent(usersTournamentListener);
 
     }
-    /*
-     * We implement a listener in order to get back to the initial activity after the data from the
-     * database is loaded.
-     */
-    public interface ControllerListener {
-        // This trigger will be used every time we need to get a unique user
-        public void onUserLoaded(User user);
-    }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
 }

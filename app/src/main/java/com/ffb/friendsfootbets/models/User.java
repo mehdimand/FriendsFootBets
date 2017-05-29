@@ -1,4 +1,4 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +15,9 @@ public class User implements Serializable{
     private ArrayList<String> tournamentsAccepted;
     private ArrayList<String> tournamentsInvited;
     private boolean profilePicture;
+
+    public User() {
+    }
 
     public User(String username) {
         this.username = username;
