@@ -21,4 +21,8 @@
     <string name="prompt_photo">Add profile picture</string>
     <string name="save_profile_prompt">Save changes</string>
     <string name="modify_profile_prompt">Modify profile</string>
+
+    <!-- URLs -->
+    <string name="competsURL">http://api.football-data.org/v1/competitions/</string>
+
 </resources>
