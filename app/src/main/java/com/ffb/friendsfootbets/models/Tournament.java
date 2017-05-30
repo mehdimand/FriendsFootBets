@@ -1,5 +1,6 @@
 package com.ffb.friendsfootbets.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
  * Created by Younes and Mehdi on 06/05/2017.
  */
 
-public class Tournament {
+public class Tournament implements Serializable {
     /* The 3 possible states for a tournament, the getState(User user) method returns the state that
      * correspond to the user.
      */
@@ -16,6 +17,7 @@ public class Tournament {
     public final static int BETTING_ONGOING = 3;
     public final static int INVITED = 4;
 
+    String touranmentId;
     String tournamentName;
     String tournamentAdminUsername;
     ArrayList<String> matchArray;
@@ -24,11 +26,21 @@ public class Tournament {
     int state;
     HashMap<User, Integer> points;
 
-    public Tournament(){}
+    public Tournament(String touranmentId) {
+        this.touranmentId = touranmentId;
+    }
 
     public Tournament(String tournamentName, String tournamentAdminUsername) {
         this.tournamentName = tournamentName;
         this.tournamentAdminUsername = tournamentAdminUsername;
+    }
+
+    public String getTouranmentId() {
+        return touranmentId;
+    }
+
+    public void setTouranmentId(String touranmentId) {
+        this.touranmentId = touranmentId;
     }
 
     public String getTournamentName() {

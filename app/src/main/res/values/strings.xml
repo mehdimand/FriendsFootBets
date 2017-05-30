@@ -24,5 +24,8 @@
 
     <!-- URLs -->
     <string name="competsURL">http://api.football-data.org/v1/competitions/</string>
+    <string name="search_hint">Friend\'s username</string>
+    <string name="search_title">Search user</string>
+    <string name="add_users_prompt">Add user</string>
 
 </resources>
