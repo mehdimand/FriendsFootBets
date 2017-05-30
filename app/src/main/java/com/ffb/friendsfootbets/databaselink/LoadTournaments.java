@@ -60,17 +60,18 @@ public class LoadTournaments {
         // We compute the number of tournament to load in order to know when to stop
         tournamentNumber =  tournamentsInvited.size() + tournamentsAccepted.size();
 
+        String tournamentId;
         for (int i = 0; i < tournamentsInvited.size(); i++){
-            Tournament tournament = new Tournament();
-            String tournamentId = tournamentsInvited.get(i);
+            tournamentId = tournamentsInvited.get(i);
+            Tournament tournament = new Tournament(tournamentId);
             tournamentsMap.put(tournamentId, tournament);
 
             loadTournament(tournamentId, true);
         }
 
         for (int i = 0; i < tournamentsAccepted.size(); i++){
-            Tournament tournament = new Tournament();
-            String tournamentId = tournamentsAccepted.get(i);
+            tournamentId = tournamentsAccepted.get(i);
+            Tournament tournament = new Tournament(tournamentId);
             tournamentsMap.put(tournamentId, tournament);
 
             loadTournament(tournamentId, false);
@@ -81,11 +82,11 @@ public class LoadTournaments {
      */
     public void loadTournament(final String tournamentId, final boolean invited){
         // We set the references for the data we want from the database
-        final DatabaseReference tournamentRef = mDatabase.child("tournaments").child(tournamentId);
-        final DatabaseReference tournamentMatchesRef = mDatabase.child("tournamentMatches").child(tournamentId);
+        DatabaseReference tournamentRef = mDatabase.child("tournaments").child(tournamentId);
+        DatabaseReference tournamentMatchesRef = mDatabase.child("tournamentMatches").child(tournamentId);
 
         // We create the listeners that will fetch the data we need
-        final ValueEventListener tournamentListener = new ValueEventListener() {
+        ValueEventListener tournamentListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -105,7 +106,7 @@ public class LoadTournaments {
                 // ...
             }
         };
-        final ValueEventListener tournamentMatchesListener = new ValueEventListener() {
+        ValueEventListener tournamentMatchesListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

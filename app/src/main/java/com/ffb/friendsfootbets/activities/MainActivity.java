@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ffb.friendsfootbets.R;
 import com.ffb.friendsfootbets.models.Tournament;
@@ -34,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         loadingCircle = (View) findViewById(R.id.loadingPanel);
 
         tournamentsListView = (ListView) findViewById(R.id.tournamentsList);
-
     }
 
     @Override
@@ -94,20 +96,44 @@ public class MainActivity extends AppCompatActivity {
         profileIntent.putExtra("firstConnection", true);
         startActivity(profileIntent);
     }
-
-    public void onClick(View view){
-        Intent profileIntent = new Intent(this, ProfileActivity.class);
-        profileIntent.putExtra("currentUser", currentUser);
-        profileIntent.putExtra("firstConnection", false);
-        startActivity(profileIntent);
-    }
-
     private void displayTournaments(HashMap<String, Tournament> tournamentsMap) {
+        // We remove the loading circle
         loadingCircle.setVisibility(View.GONE);
         System.out.println("Display tournaments");
-        ArrayList<Tournament> tournamentsList = new ArrayList<>(tournamentsMap.values());
+
+        // Display the tournaments in the listview
+        final ArrayList<Tournament> tournamentsList = new ArrayList<>(tournamentsMap.values());
         TournamentAdapter tournamentAdapter = new TournamentAdapter(this, tournamentsList);
         tournamentsListView.setAdapter(tournamentAdapter);
+
+        tournamentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // selected item
+                Tournament  tournament = tournamentsList.get(position);
+
+                Intent tournamentIntent = new Intent(getApplicationContext(), TournamentActivity.class);
+                tournamentIntent.putExtra("currentUser", currentUser);
+                tournamentIntent.putExtra("tournament", tournament);
+                startActivity(tournamentIntent);
+
+            }
+        });
     }
+
+    public void onClick(View view){
+        switch (view.getId()) {
+            case R.id.modify_profile_button:
+                Intent profileIntent = new Intent(this, ProfileActivity.class);
+                profileIntent.putExtra("currentUser", currentUser);
+                profileIntent.putExtra("firstConnection", false);
+                startActivity(profileIntent);
+                break;
+        }
+
+    }
+
+
 
 }
