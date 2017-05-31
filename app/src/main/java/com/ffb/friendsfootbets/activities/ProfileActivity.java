@@ -177,7 +177,6 @@ public class ProfileActivity extends AppCompatActivity {
                 Object tempBoolProfilePicture = dataSnapshot.child("profilePicture").getValue();
                 user.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
                 followedUserList.add(user);
-                System.out.println(followedUserList.toString());
                 followedUsersLoadedTrigger();
 
             }
@@ -340,7 +339,6 @@ public class ProfileActivity extends AppCompatActivity {
                 // get the cropped bitmap
                 Bitmap selectedBitmap = extras.getParcelable("data");
                 imageView.setVisibility(View.VISIBLE);
-                System.out.println("changing imageview");
 
                 // We recycle the imageView only if it's already filled with a picture
                 if (imageView.getDrawable() != null){

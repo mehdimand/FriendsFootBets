@@ -69,8 +69,6 @@ public class UserAdapter extends ArrayAdapter<User> {
         Glide.with(this.getContext() /* context */)
                 .using(new FirebaseImageLoader())
                 .load(userPictureRef)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
                 .into(imageView);
 
         // TODO : add progress bar

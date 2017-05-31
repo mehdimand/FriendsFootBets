@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     private void displayTournaments(HashMap<String, Tournament> tournamentsMap) {
         // We remove the loading circle
         loadingCircle.setVisibility(View.GONE);
-        System.out.println("Display tournaments");
 
         // Display the tournaments in the listview
         final ArrayList<Tournament> tournamentsList = new ArrayList<>(tournamentsMap.values());

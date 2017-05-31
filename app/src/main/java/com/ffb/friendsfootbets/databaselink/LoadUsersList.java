@@ -59,10 +59,14 @@ public class LoadUsersList {
         usersListMap = new HashMap<>();
 
         // We compute the number of users to load in order to know when to stop
-        usersNumber = usernamesList.size();
+        if (usernamesList != null){
+            usersNumber = usernamesList.size();
+        }else{
+            usersNumber = 0;
+        }
 
-        String tournamentId;
-        for (int i = 0; i < usernamesList.size(); i++){
+
+        for (int i = 0; i < usersNumber ; i++){
             String username = usernamesList.get(i);
             User user = new User(username);
             usersListMap.put(username, user);
@@ -117,20 +121,28 @@ public class LoadUsersList {
         }
     }
 
-    public void searchUsername(String usernameQuery){
-        Query query = mDatabase.child("users").orderByKey().startAt(null, usernameQuery).endAt(null, usernameQuery+'~');
+    public void searchUsername(String usernameQuery, int maxNumber){
+        usersListMap = new HashMap<>();
+        Query query = mDatabase.child("users").orderByKey().startAt(usernameQuery).endAt(usernameQuery+"~").limitToFirst(maxNumber);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String username = "";
-                ArrayList<String> usernameList = new ArrayList<String>();
                 for (DataSnapshot usersSnapshot : dataSnapshot.getChildren()) {
                     username = usersSnapshot.getKey();
-                    usernameList.add(username);
+                    User user = new User(username);
+
+                    user.setName((String) dataSnapshot.child("name").getValue());
+                    user.setEmail((String) dataSnapshot.child("email").getValue());
+                    // In some cases the profilePicture key isn't set (when no picture is chosen)
+                    Object tempBoolProfilePicture = dataSnapshot.child("profilePicture").getValue();
+                    user.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
+
+                    usersListMap.put(username, user);
                 }
 
-                if (usernameList.size() > 0){
-                    loadUsers(usernameList);
+                if (usersListMap.size() > 0){
+                    listener.onUsersListLoaded(usersListMap);
                 }
 
             }
