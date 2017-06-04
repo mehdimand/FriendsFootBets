@@ -88,8 +88,7 @@
         android:layout_gravity="right"
         android:layout_toRightOf="@id/bloc1"
         android:layout_below="@id/state"
-        android:layout_weight="1"
-        app:srcCompat="?android:attr/findOnPageNextDrawable" />
+        android:layout_weight="1" />
 
     <ListView
         android:id="@+id/tohide"
