@@ -22,10 +22,20 @@
     <string name="save_profile_prompt">Save changes</string>
     <string name="modify_profile_prompt">Modify profile</string>
 
-    <!-- URLs -->
-    <string name="competsURL">http://api.football-data.org/v1/competitions/</string>
     <string name="search_hint">Friend\'s username</string>
     <string name="search_title">Search user</string>
     <string name="add_users_prompt">Add user</string>
+
+    <!-- URLs -->
+    <string name="competsURL">http://api.football-data.org/v1/competitions/</string>
+    <string name="url_pl">http://api.football-data.org/v1/competitions/426/fixtures</string>
+    <string name="url_facup">http://api.football-data.org/v1/competitions/429/fixtures</string>
+    <string name="url_bundesliga">http://api.football-data.org/v1/competitions/430/fixtures</string>
+    <string name="url_l1">http://api.football-data.org/v1/competitions/434/fixtures</string>
+    <string name="url_liga">http://api.football-data.org/v1/competitions/436/fixtures</string>
+    <string name="url_seriea">http://api.football-data.org/v1/competitions/438/fixtures</string>
+    <string name="url_ldc">http://api.football-data.org/v1/competitions/440/fixtures</string>
+
+    <string name="error">Le serveur nous a laché :(</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,7 +22,8 @@ public class TournamentActivity extends AppCompatActivity {
     private TextView tournamentAdminView;
     private ListView usersListView;
     private ListView matchesListView;
-    private Button addUserButton;
+    private ImageButton addUserButton;
+    private ImageButton addMatchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,8 @@ public class TournamentActivity extends AppCompatActivity {
         usersListView = (ListView) findViewById(R.id.usersList);
         matchesListView = (ListView) findViewById(R.id.matchesList);
 
-        addUserButton = (Button) findViewById(R.id.add_user_button);
+        addUserButton = (ImageButton) findViewById(R.id.add_user_button);
+        addMatchButton = (ImageButton) findViewById(R.id.add_match_button);
 
     }
 

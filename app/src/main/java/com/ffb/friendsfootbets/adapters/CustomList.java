@@ -1,4 +1,4 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.adapters;
 
 
 /**
@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ffb.friendsfootbets.R;
+
 public class CustomList extends ArrayAdapter<String> {
 
     private final Activity context;
@@ -25,7 +27,7 @@ public class CustomList extends ArrayAdapter<String> {
 
 
     public CustomList(Activity context, String[] tx1, Integer[] imageId1) {
-        super(context, R.layout.listforcomp, tx1);
+        super(context, R.layout.list_comp, tx1);
         this.context = context;
         this.tx1 = tx1;
         this.imageId1 = imageId1;
@@ -34,7 +36,7 @@ public class CustomList extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.listforcomp, null, true);
+        View rowView = inflater.inflate(R.layout.list_comp, null, true);
         TextView txtTitle1 = (TextView) rowView.findViewById(R.id.namecomp);
 
 
