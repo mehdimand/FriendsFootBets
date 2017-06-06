@@ -5,39 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ffb.friendsfootbets.activities.MainActivity">
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/modify_profile_button"
-            style="?android:textAppearanceSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/modify_profile_prompt"
-            android:textStyle="bold"
-            android:onClick="onClick" />
-
-        <ListView
-            android:id="@+id/tournamentsList"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </ListView>
+            <Button
+                android:id="@+id/modify_profile_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/modify_profile_prompt"
+                android:textStyle="bold"
+                android:onClick="onClick" />
 
-        <ListView
-            android:id="@+id/rankingsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <ListView
+                android:id="@+id/tournamentsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </ListView>
+            </ListView>
+
+            <ListView
+                android:id="@+id/rankingsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </ListView>
+            <Button
+                android:id="@+id/create_tournament_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/create_tournament_prompt"
+                android:textStyle="bold"
+                android:onClick="onClick" />
 
 
-    </LinearLayout>
-
+        </LinearLayout>
+    </ScrollView>
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"

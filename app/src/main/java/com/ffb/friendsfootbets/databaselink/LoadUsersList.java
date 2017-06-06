@@ -132,10 +132,10 @@ public class LoadUsersList {
                     username = usersSnapshot.getKey();
                     User user = new User(username);
 
-                    user.setName((String) dataSnapshot.child("name").getValue());
-                    user.setEmail((String) dataSnapshot.child("email").getValue());
+                    user.setName((String) usersSnapshot.child("name").getValue());
+                    user.setEmail((String) usersSnapshot.child("email").getValue());
                     // In some cases the profilePicture key isn't set (when no picture is chosen)
-                    Object tempBoolProfilePicture = dataSnapshot.child("profilePicture").getValue();
+                    Object tempBoolProfilePicture = usersSnapshot.child("profilePicture").getValue();
                     user.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
 
                     usersListMap.put(username, user);

@@ -36,6 +36,7 @@ public class Tournament implements Serializable {
         this.matchArray = new ArrayList<>();
         this.invitedUserArray = new ArrayList<>();
         this.points = new HashMap<>();
+        addUser(tournamentAdminUsername);
     }
 
     public String getTouranmentId() {

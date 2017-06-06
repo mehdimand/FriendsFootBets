@@ -50,19 +50,26 @@ public class UserAdapter extends ArrayAdapter<User> {
         //il ne reste plus qu'à remplir notre vue
         viewHolder.name.setText(user.getName());
         viewHolder.username.setText(user.getUsername());
-        if (user.hasProfilePicture()){
-            displayProfilePicture(user.getUsername(), viewHolder.profilePicture);
-        }
+        displayProfilePicture(user, viewHolder.profilePicture);
+
 
         return convertView;
     }
 
-    private void displayProfilePicture(String username, ImageView imageView) {
+    private void displayProfilePicture(User user, ImageView imageView) {
         // Create a storage reference from our app
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
+
+        StorageReference userPictureRef;
+        if (user.hasProfilePicture()){
+            // Reference to user's picture
+            userPictureRef = storageRef.child("profilePicture/"+user.getUsername()+".jpg");
+        }else{
+            // Reference to user's picture
+            userPictureRef = storageRef.child("images/nophoto.png");
+        }
         // Reference to user's picture
-        StorageReference userPictureRef = storageRef.child("profilePicture/"+username+".jpg");
 
         imageView.setVisibility(View.VISIBLE);
         // Load the image using Glide
