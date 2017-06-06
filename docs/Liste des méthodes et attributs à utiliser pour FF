@@ -1,0 +1,76 @@
+Liste des méthodes et attributs à utiliser pour FFB :
+
+
+Les classes :
+	Controller
+		Attributes :
+			tournamentsMap : id -> Tournament
+			matchesMap : id du match (le même que sur l'API) -> match
+			usersMap : username -> User
+			currentUser
+			currentTournament
+			currentMatch
+			??? Date lastUpdate -> date et heure de la dernière mise à jour depuis l'API (?? voir si il n'y a pas une façon plus propre de le faire)
+		Methodes :
+			void addTournament(Tournament)
+			void addMatch(Match)
+			void addUser(User)
+			Tournament getTournament(int id)
+			Match getMatch(int id)
+			User getUser(String username)
+			User getUser(String email) -> 2 méthodes pour avoir accès à un utilisateur (la deuxième est plus pratique pour traiter le 									login je pense)
+			ArrayList<Tournament> getTournamentsForUser(User user)
+			ArrayList<Tournament> getInvitationsForUser(User user) -> liste des invitations pour des tournois
+			ArrayList<Match> getNextGames(int numberOfGames) -> affiche les prochains matchs
+			??? void updateMatchesDatabase()
+
+	User
+		Attributes:
+			String username
+			String email
+			ArrayList<User> usersFollowed
+			String photoUrl
+		Methods :
+			constructor
+			getter setter
+	Tournament
+		Attributes:
+			String name
+			User admin
+			ArrayList<Interger> matchArray
+			ArrayLIst<User> userArray
+			int state -> entier plutot que string : utiliser les variables en majuscules (final static ?)
+			Map users -> points
+		Methods :
+			constructor
+			getters setters
+			ArrayList<User> sortUsersByPoints()
+			Map idMatch -> Match getMatchesFromAPI()
+			void updateMatches() -> tries to update the matches that have started but for which the scores aren't avilable yet
+			void calculatePoints()
+
+
+	Match
+		Attributes:
+			String nameHomeTeam
+			String crestHomeUrl
+			String nameAwayTeam
+			String crestAwayUrl
+			Map user -> string bet
+			Date matchDate
+			int scoreHomeTeam -> mettre -1 si le score final n'est pas encore dispo
+			int scoreAwayTeam
+		Methods :
+			getters et setters
+
+
+
+
+
+
+
+
+
+
+
+

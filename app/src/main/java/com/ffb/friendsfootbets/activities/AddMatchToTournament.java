@@ -1,13 +1,18 @@
-package com.ffb.friendsfootbets;
+package com.ffb.friendsfootbets.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AddMatchToTournament extends Activity {
+import com.ffb.friendsfootbets.adapters.CustomList;
+import com.ffb.friendsfootbets.R;
+
+public class AddMatchToTournament extends AppCompatActivity {
 
     ListView list;
     String[] txt = {
@@ -15,7 +20,7 @@ public class AddMatchToTournament extends Activity {
             "Premier League",
             "Liga",
             "Ligue 1",
-            "Ligue Europa",
+            "FA Cup",
             "Bundesliga",
             "Serie A"
     };
@@ -24,11 +29,22 @@ public class AddMatchToTournament extends Activity {
             R.drawable.logo_pl,
             R.drawable.logo_liga,
             R.drawable.logo_ligue1,
-            R.drawable.logo_europa,
+            R.drawable.logo_facup,
             R.drawable.logo_bundesliga,
             R.drawable.logo_seriea
     };
 
+    Integer[] imageUrl = {
+            R.string.url_ldc,
+            R.string.url_pl,
+            R.string.url_liga,
+            R.string.url_l1,
+            R.string.url_facup,
+            R.string.url_bundesliga,
+            R.string.url_seriea
+    };
+
+    public final static String Url_fixtures = "matches" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +61,9 @@ public class AddMatchToTournament extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Toast.makeText(AddMatchToTournament.this, "You Clicked at " + txt[+position], Toast.LENGTH_SHORT).show();
-
+                Intent intent = new Intent(AddMatchToTournament.this, AddMatchToTournament2.class);
+                intent.putExtra(Url_fixtures,imageUrl[position]);
+                startActivity(intent);
             }
         });
 

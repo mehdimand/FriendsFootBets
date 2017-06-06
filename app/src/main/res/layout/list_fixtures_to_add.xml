@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ffb.friendsfootbets.Slider xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/slider"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:columnCount="2">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/bloc1"
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
         android:gravity="left"
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/date"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
+            android:paddingLeft="30dip"
             android:paddingTop="2dip"
             android:textColor="#5d5d5d"
             android:textSize="14sp"
@@ -33,7 +31,7 @@
 
             <TextView
                 android:id="@+id/hteam"
-                android:layout_width="170dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:gravity="left"
@@ -47,14 +45,14 @@
 
             <TextView
                 android:id="@+id/ateam"
-                android:layout_width="170dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:gravity="right"
                 android:paddingBottom="2dip"
-                android:paddingRight="10dip"
                 android:paddingTop="2dip"
+                android:paddingRight="10dip"
                 android:textAlignment="textEnd"
+                android:layout_gravity="end"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -73,28 +71,19 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/state"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_gravity="right"
-        android:layout_toRightOf="@id/bloc1"
-        android:layout_weight="1" />
-
-    <ImageButton
-        android:id="@+id/showhide"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="right"
-        android:layout_toRightOf="@id/bloc1"
-        android:layout_below="@id/state"
-        android:layout_weight="1" />
-
-    <ListView
-        android:id="@+id/tohide"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bloc1"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-</com.ffb.friendsfootbets.Slider>
+        <ImageView
+            android:id="@+id/choose_match_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color1"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

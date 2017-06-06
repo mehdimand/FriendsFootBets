@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,12 +24,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.TournamentActivity" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".AddMatchToTournament" />
-        <activity android:name=".AddMatchToTournament2" />
         <activity android:name=".activities.AddUsersToTournamentActivity"/>
+        <activity android:name=".activities.AddMatchToTournament" />
+        <activity android:name=".activities.AddMatchToTournament2" />
+        <activity android:name=".activities.ErrorServer"></activity>
+
     </application>
 
 </manifest>
