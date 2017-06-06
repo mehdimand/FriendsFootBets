@@ -4,19 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.ffb.friendsfootbets.activities.AddUsersToTournamentActivity">
 
-    <ScrollView
+    <ListView
+        android:id="@+id/list_users"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="fill_parent"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp" />
 
-        <ListView
-            android:id="@+id/list_users"
-            android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:divider="#b5b5b5"
-            android:dividerHeight="1dp" />
+            android:indeterminate="true" />
+    </RelativeLayout>
 
-    </ScrollView>
 
 </LinearLayout>

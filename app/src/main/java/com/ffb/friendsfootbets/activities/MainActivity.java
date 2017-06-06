@@ -1,16 +1,21 @@
 package com.ffb.friendsfootbets.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.databaselink.SaveTournament;
 import com.ffb.friendsfootbets.models.Tournament;
 import com.ffb.friendsfootbets.models.User;
 import com.ffb.friendsfootbets.adapters.TournamentAdapter;
@@ -99,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     private void displayTournaments(HashMap<String, Tournament> tournamentsMap) {
         // We remove the loading circle
         loadingCircle.setVisibility(View.GONE);
-        System.out.println("Display tournaments");
 
         // Display the tournaments in the listview
         final ArrayList<Tournament> tournamentsList = new ArrayList<>(tournamentsMap.values());
@@ -130,10 +134,51 @@ public class MainActivity extends AppCompatActivity {
                 profileIntent.putExtra("firstConnection", false);
                 startActivity(profileIntent);
                 break;
+            case R.id.create_tournament_button:
+                createTournamentPrompt();
+                break;
         }
 
     }
 
+    private void createTournamentPrompt() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final EditText edittext = new EditText(this);
+        alert.setMessage("Choose the tournament's name :");
+        alert.setTitle("Create Tournament");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                String tournamentName = edittext.getText().toString();
+                if(tournamentName != ""){
+                    createTournament(tournamentName);
+                }else{
+                    Toast.makeText(MainActivity.this, "Please enter a valid name", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.show();
+    }
+
+    private void createTournament(String tournamentName) {
+        SaveTournament saveTournament = new SaveTournament();
+        Tournament createdTournament = saveTournament.createTournament(currentUser, tournamentName);
+
+        Intent tournamentIntent = new Intent(getApplicationContext(), TournamentActivity.class);
+        tournamentIntent.putExtra("currentUser", currentUser);
+        tournamentIntent.putExtra("tournament", createdTournament);
+        startActivity(tournamentIntent);
+    }
 
 
 }

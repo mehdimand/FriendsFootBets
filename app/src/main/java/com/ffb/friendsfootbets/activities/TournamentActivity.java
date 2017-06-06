@@ -65,6 +65,7 @@ public class TournamentActivity extends AppCompatActivity {
             case R.id.add_user_button:
                 Intent addUserIntent = new Intent(this, AddUsersToTournamentActivity.class);
                 addUserIntent.putExtra("tournament", currentTournament);
+                addUserIntent.putExtra("user", currentUser);
                 startActivity(addUserIntent);
                 break;
         }
