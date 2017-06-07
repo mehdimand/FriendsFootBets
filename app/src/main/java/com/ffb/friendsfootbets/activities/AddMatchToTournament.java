@@ -11,9 +11,13 @@ import android.widget.Toast;
 
 import com.ffb.friendsfootbets.adapters.CustomList;
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.models.Tournament;
+import com.ffb.friendsfootbets.models.User;
 
 public class AddMatchToTournament extends AppCompatActivity {
 
+    Tournament currentTournament;
+    User currentUser;
     ListView list;
     String[] txt = {
             "Ligue des Champions",
@@ -63,10 +67,22 @@ public class AddMatchToTournament extends AppCompatActivity {
                 Toast.makeText(AddMatchToTournament.this, "You Clicked at " + txt[+position], Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(AddMatchToTournament.this, AddMatchToTournament2.class);
                 intent.putExtra(Url_fixtures,imageUrl[position]);
+                intent.putExtra("tournament", currentTournament);
+                intent.putExtra("user", currentUser);
                 startActivity(intent);
             }
         });
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        currentTournament = (Tournament) extras.getSerializable("tournament");
+
+        System.out.println("add1 "+currentTournament.toString());
+    }
 }

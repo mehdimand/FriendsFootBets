@@ -2,7 +2,10 @@ package com.ffb.friendsfootbets.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Younes and Mehdi on 06/05/2017.
@@ -119,9 +122,15 @@ public class Tournament implements Serializable {
         this.state = state;
     }
 
-    //TODO tri sur place de userArray
-    public void sortUsersByPoints(){
-
+    public ArrayList<String> sortUsersByPoints(){
+        ArrayList<String> usernameList = new ArrayList<>(points.keySet());
+        Collections.sort(usernameList, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return points.get(o1).compareTo(points.get(o2));
+            }
+        });
+        return usernameList;
     }
 
     public HashMap<Integer, Match> getMatchesFromAPI(){
@@ -137,4 +146,16 @@ public class Tournament implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "touranmentId='" + touranmentId + '\'' +
+                ", tournamentName='" + tournamentName + '\'' +
+                ", tournamentAdminUsername='" + tournamentAdminUsername + '\'' +
+                ", matchArray=" + matchArray +
+                ", invitedUserArray=" + invitedUserArray +
+                ", state=" + state +
+                ", points=" + points +
+                '}';
+    }
 }

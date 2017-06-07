@@ -2,6 +2,7 @@ package com.ffb.friendsfootbets.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Younes and Mehdi on 06/05/2017.
@@ -12,6 +13,7 @@ public class User implements Serializable{
     private String username;
     private String email;
     private ArrayList<String> usersFollowed;
+    private HashMap<String, String> bets;
     private ArrayList<String> tournamentsAccepted;
     private ArrayList<String> tournamentsInvited;
     private boolean profilePicture;
@@ -60,6 +62,14 @@ public class User implements Serializable{
 
     public void setUsersFollowed(ArrayList<String> usersFollowed) {
         this.usersFollowed = usersFollowed;
+    }
+
+    public HashMap<String, String> getBets() {
+        return bets;
+    }
+
+    public void setBets(HashMap<String, String> bets) {
+        this.bets = bets;
     }
 
     public boolean hasProfilePicture() {
