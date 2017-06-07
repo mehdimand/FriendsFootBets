@@ -107,20 +107,52 @@ public class MainActivity extends AppCompatActivity {
 
         // Display the tournaments in the listview
         final ArrayList<Tournament> tournamentsList = new ArrayList<>(tournamentsMap.values());
-        TournamentAdapter tournamentAdapter = new TournamentAdapter(this, tournamentsList);
+        TournamentAdapter tournamentAdapter = new TournamentAdapter(this, tournamentsList, currentUser);
         tournamentsListView.setAdapter(tournamentAdapter);
+        tournamentsListView.setVisibility(View.GONE);
+        tournamentsListView.setVisibility(View.VISIBLE);
 
         tournamentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
                 // selected item
-                Tournament  tournament = tournamentsList.get(position);
+                final Tournament  tournament = tournamentsList.get(position);
+                if(currentUser.getTournamentsAccepted().contains(tournament.getTouranmentId())){
+                    Intent tournamentIntent = new Intent(getApplicationContext(), TournamentActivity.class);
+                    tournamentIntent.putExtra("currentUser", currentUser);
+                    tournamentIntent.putExtra("tournament", tournament);
+                    startActivity(tournamentIntent);
+                }else{
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                    alertDialogBuilder.setMessage("Do you want to join the "+
+                            tournament.getTournamentName()+" tournament ?");
 
-                Intent tournamentIntent = new Intent(getApplicationContext(), TournamentActivity.class);
-                tournamentIntent.putExtra("currentUser", currentUser);
-                tournamentIntent.putExtra("tournament", tournament);
-                startActivity(tournamentIntent);
+                    alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)  {
+                            SaveTournament saveTournament = new SaveTournament();
+                            saveTournament.addUserToTournament(currentUser, tournament);
+
+                            // go to this tournament activity
+                            Intent tournamentIntent = new Intent(getApplicationContext(), TournamentActivity.class);
+                            tournamentIntent.putExtra("currentUser", currentUser);
+                            tournamentIntent.putExtra("tournament", tournament);
+                            startActivity(tournamentIntent);
+                        }
+                    });
+
+                    alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)  {
+                            SaveTournament saveTournament = new SaveTournament();
+                            saveTournament.removeInvitedUser(currentUser, tournament);
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
 
             }
         });

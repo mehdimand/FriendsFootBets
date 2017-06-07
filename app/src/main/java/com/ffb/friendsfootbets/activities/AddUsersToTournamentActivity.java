@@ -109,7 +109,7 @@ public class AddUsersToTournamentActivity extends AppCompatActivity {
                 displayUserList(userList);
             }
         });
-        loadUsersList.loadUsers(usernamesList);
+        loadUsersList.loadUsers(usernamesList, false);
     }
 
     public void displayUserList(final ArrayList<User> userList){

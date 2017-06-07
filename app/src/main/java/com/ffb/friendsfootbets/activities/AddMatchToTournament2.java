@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.ffb.friendsfootbets.HttpHandler;
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.databaselink.SaveTournament;
+import com.ffb.friendsfootbets.models.Tournament;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 public class AddMatchToTournament2 extends AppCompatActivity {
 
     private String TAG = AddMatchToTournament2.class.getSimpleName();
+    private Tournament currentTournament;
 
     private ProgressDialog pDialog;
     private ListView lv;
@@ -56,6 +59,15 @@ public class AddMatchToTournament2 extends AppCompatActivity {
 
         new GetFixtures().execute();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        currentTournament = (Tournament) extras.getSerializable("tournament");
     }
 
     // TODO: mettre tout ce qui suit dans une classe GetFixtures1
@@ -195,17 +207,19 @@ public class AddMatchToTournament2 extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(AddMatchToTournament2.this, "Match added", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(AddMatchToTournament2.this, AddMatchToTournament.class);
+                    /*Intent intent = new Intent(AddMatchToTournament2.this, AddMatchToTournament.class);*/
 
                     HashMap<String, String> fixtureadded = fixtures_list.get(position);
 
 
                     String idmatch = fixtureadded.get("id");
-                    intent.putExtra("idmatch",idmatch);
+                    /*intent.putExtra("idmatch",idmatch);*/
 
                     // TODO: add the match id to the database
-
-                    startActivity(intent);
+                    SaveTournament saveTournament = new SaveTournament();
+                    saveTournament.addMatchtoTournament(currentTournament, idmatch.split("fixtures/")[1]);
+                    System.out.println(idmatch.split("fixtures/")[1]);
+                    /*startActivity(intent);*/
                 }
             });
 
