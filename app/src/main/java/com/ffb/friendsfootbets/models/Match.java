@@ -8,25 +8,33 @@ import java.util.HashMap;
  */
 
 public class Match {
+    String matchId;
     String nameHomeTeam;
     String crestHomeUrl;
     String nameAwayTeam;
     String crestAwayUrl;
     HashMap<User, String> bets;
-    Date matchDate;
+    String matchDate;
+    String matchHour;
     //Set to -1 if the score isn't available yet
     int scoreHomeTeam;
     int scoreAwayTeam;
 
-    public Match(String nameHomeTeam, String crestHomeUrl, String nameAwayTeam, String crestAwayUrl, HashMap<User, String> bets, Date matchDate) {
+    public Match(String matchId, String nameHomeTeam, String nameAwayTeam, String matchDate, int scoreHomeTeam, int scoreAwayTeam) {
+        this.matchId = matchId;
         this.nameHomeTeam = nameHomeTeam;
-        this.crestHomeUrl = crestHomeUrl;
         this.nameAwayTeam = nameAwayTeam;
-        this.crestAwayUrl = crestAwayUrl;
-        this.bets = bets;
         this.matchDate = matchDate;
-        this.scoreHomeTeam = -1;
-        this.scoreAwayTeam = -1;
+        this.scoreHomeTeam = scoreHomeTeam;
+        this.scoreAwayTeam = scoreAwayTeam;
+    }
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(String matchId) {
+        this.matchId = matchId;
     }
 
     public String getNameHomeTeam() {
@@ -69,12 +77,20 @@ public class Match {
         this.bets.put(user, bet);
     }
 
-    public Date getMatchDate() {
+    public String getMatchDate() {
         return matchDate;
     }
 
-    public void setMatchDate(Date matchDate) {
+    public void setMatchDate(String matchDate) {
         this.matchDate = matchDate;
+    }
+
+    public String getMatchHour() {
+        return matchHour;
+    }
+
+    public void setMatchHour(String matchHour) {
+        this.matchHour = matchHour;
     }
 
     public int getScoreHomeTeam() {

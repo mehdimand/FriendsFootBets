@@ -63,6 +63,9 @@ public class User implements Serializable{
     public void setUsersFollowed(ArrayList<String> usersFollowed) {
         this.usersFollowed = usersFollowed;
     }
+    public void addUserFollowed(String username){
+        this.usersFollowed.add(username);
+    }
 
     public HashMap<String, String> getBets() {
         return bets;

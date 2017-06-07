@@ -48,15 +48,17 @@ public class LoadFixtures {
 
     private ProgressDialog pDialog;
 
-    private Integer url;
+    private String url;
     private LoadFixturesA loadFixturesA;
 
 
-    public void loadFixtures(int url){
+    public void loadFixtures(String url){
         this.url = url;
+        fixtures_list = new ArrayList<>();
         System.out.println("aaa"+this.url);
         loadFixturesA.execute();
     }
+
 
     private class LoadFixturesA extends AsyncTask<Void, Void, Void>{
 
@@ -72,7 +74,7 @@ public class LoadFixtures {
 
             // Making a request to url and getting response
             // faut récuperer l'url des matchs pour chaque compétition
-            String jsonStr = sh.makeServiceCall(Integer.toString(url));
+            String jsonStr = sh.makeServiceCall(url);
 
             Log.e(TAG, "Response from url: " + jsonStr);
 

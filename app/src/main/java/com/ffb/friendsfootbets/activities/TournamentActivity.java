@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.adapters.MatchAdapter;
 import com.ffb.friendsfootbets.adapters.UserAdapter;
 import com.ffb.friendsfootbets.adapters.UserPointsAdapter;
 import com.ffb.friendsfootbets.databaselink.LoadUsersList;
@@ -104,44 +105,51 @@ public class TournamentActivity extends AppCompatActivity {
         counter++;
         if (counter == 2){
             ArrayList<User> userList = new ArrayList<User>(userMap.values());
-            displayUserList(userList);
+            displayUserListAndMatches(userList);
         }
     }
 
-    private void displayUserList(final ArrayList<User> userList) {
-        UserAdapter userAdapter = new UserAdapter(getApplicationContext(), userList);
-        usersListView.setAdapter(userAdapter);
-
-        usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // selected item
-                User user = userList.get(position);
-
-            }
-        });
+    private void displayUserListAndMatches(final ArrayList<User> userList) {
+        // We compute the number of points for every user
         computeUserPoints(userList, matchMap);
+        // We sort the array of usernames by points
         ArrayList<String> sortedUsernames = currentTournament.sortUsersByPoints();
+
+        // We link each username to its user instances for display purposes
         ArrayList<User> sortedUsers = new ArrayList<>();
         for (String username : sortedUsernames){
             User user = userMap.get(username);
             sortedUsers.add(user);
         }
 
-        UserPointsAdapter userPointsAdapter = new UserPointsAdapter(getApplicationContext(),
-                userList, currentTournament.getPoints());
+        // Display the users and the matches in their respective listviews
+        // Members of the tournament
+        UserAdapter userAdapter = new UserAdapter(getApplicationContext(), userList);
         usersListView.setAdapter(userAdapter);
+
+        // Rankings
+        UserPointsAdapter userPointsAdapter = new UserPointsAdapter(getApplicationContext(),
+                sortedUsers, currentTournament.getPoints());
+        usersListView.setAdapter(userPointsAdapter);
+
+        // Matches of the tournament
+        ArrayList<Match> matchesList = new ArrayList<>(matchMap.values());
+        MatchAdapter matchAdapter = new MatchAdapter(getApplicationContext(), matchesList, currentUser);
+        matchesListView.setAdapter(matchAdapter);
 
     }
 
     private void computeUserPoints(ArrayList<User> userList, HashMap<String, Match> matchMap) {
         for (User user : userList){
-            HashMap<String, String> bets = user.getBets();
-            for (String matchId : bets.keySet()){
+            // This map links a matchId to a bet in the "homeScore-awayScore" format
+            HashMap<String, String> userBets = user.getBets();
+            for (String matchId : userBets.keySet()){
                 if (matchMap.containsKey(matchId)){
                     Match match = matchMap.get(matchId);
-                    int additionalPoints = pointsForBet(match, bets.get(matchId));
+                    // We add the bet to the match in order to display the bets more easily
+                    match.addBet(user, userBets.get(matchId));
+                    // We compute the number of points the user deserves for this on bet
+                    int additionalPoints = pointsForBet(match, userBets.get(matchId));
                     currentTournament.addPointsForUser(user.getUsername(), additionalPoints);
                 }
             }
