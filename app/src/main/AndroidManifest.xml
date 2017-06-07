@@ -29,6 +29,7 @@
         <activity android:name=".activities.TournamentActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.AddUsersToTournamentActivity"/>
+        <activity android:name=".activities.AddUsersToFollowedActivity"/>
         <activity android:name=".activities.AddMatchToTournament" />
         <activity android:name=".activities.AddMatchToTournament2" />
         <activity android:name=".activities.ErrorServer"></activity>

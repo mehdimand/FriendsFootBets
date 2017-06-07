@@ -28,6 +28,7 @@ public class Match {
         this.matchHour = matchHour;
         this.scoreHomeTeam = scoreHomeTeam;
         this.scoreAwayTeam = scoreAwayTeam;
+        bets = new HashMap<>();
     }
 
     public Match(String matchId, String nameHomeTeam, String nameAwayTeam, String matchDate, int scoreHomeTeam, int scoreAwayTeam) {
@@ -37,6 +38,7 @@ public class Match {
         this.matchDate = matchDate;
         this.scoreHomeTeam = scoreHomeTeam;
         this.scoreAwayTeam = scoreAwayTeam;
+        bets = new HashMap<>();
     }
 
     public String getMatchId() {

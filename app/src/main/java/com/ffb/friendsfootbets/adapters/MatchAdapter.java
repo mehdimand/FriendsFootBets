@@ -34,7 +34,7 @@ public class MatchAdapter extends ArrayAdapter<Match> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_fixtures,parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_fixtures_to_add,parent, false);
         }
 
         TournamentViewHolder viewHolder = (TournamentViewHolder) convertView.getTag();
@@ -44,18 +44,19 @@ public class MatchAdapter extends ArrayAdapter<Match> {
             viewHolder.homeTeam = (TextView) convertView.findViewById(R.id.hteam);
             viewHolder.awayTeam = (TextView) convertView.findViewById(R.id.ateam);
             viewHolder.hour = (TextView) convertView.findViewById(R.id.heure);
-            viewHolder.state = (ImageView) convertView.findViewById(R.id.state);
+            //viewHolder.state = (ImageView) convertView.findViewById(R.id.state);
             convertView.setTag(viewHolder);
         }
 
         //getItem(position) va récupérer l'item [position] de la List<Tournament> Tournaments
         Match match = getItem(position);
         //il ne reste plus qu'à remplir notre vue
-        if(currentUser.getBets().keySet().contains(match.getMatchId())){
+        /*if(currentUser.getBets().keySet().contains(match.getMatchId())){
             viewHolder.state.setImageResource(R.drawable.ic_turned_in);
         }else{
             viewHolder.state.setImageResource(R.drawable.ic_turned_in_not);
         }
+        */
         viewHolder.date.setText(match.getMatchDate());
         viewHolder.hour.setText(match.getMatchHour());
         viewHolder.homeTeam.setText(match.getNameHomeTeam());

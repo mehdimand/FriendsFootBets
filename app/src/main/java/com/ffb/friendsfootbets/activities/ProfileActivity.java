@@ -107,6 +107,16 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        Button followUserButton = (Button) findViewById(R.id.follow_user_profile_button);
+        followUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddUsersToFollowedActivity.class);
+                intent.putExtra("user", currentUser);
+                startActivity(intent);
+            }
+        });
+
         profileFormView = findViewById(R.id.username_form);
         progressView = findViewById(R.id.modify_profile_progress);
         followedUsersListView = (ListView) findViewById(R.id.list_followed_users);

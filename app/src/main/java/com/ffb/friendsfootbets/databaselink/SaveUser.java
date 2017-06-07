@@ -24,4 +24,7 @@ public class SaveUser {
     public void followUser(User currentUser, User userToFollow) {
         mDatabase.child("userFollowed").child(currentUser.getUsername()).child(userToFollow.getUsername()).setValue(true);
     }
+    public void addBet(User user, Match match, String bet){
+        mDatabase.child("userMatches").child(user.getUsername()).child(match.getMatchId()).setValue(bet);
+    }
 }

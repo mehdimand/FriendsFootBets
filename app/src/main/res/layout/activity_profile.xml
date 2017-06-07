@@ -79,12 +79,22 @@
             android:text="@string/save_profile_prompt"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/follow_user_profile_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Follow users"
+            android:textStyle="bold" />
+
         <ListView
             android:id="@+id/list_followed_users"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:divider="#b5b5b5"
             android:dividerHeight="1dp" />
+
 
     </LinearLayout>
 

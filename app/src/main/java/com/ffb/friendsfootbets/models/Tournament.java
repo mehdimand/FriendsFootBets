@@ -127,7 +127,7 @@ public class Tournament implements Serializable {
         Collections.sort(usernameList, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                return points.get(o1).compareTo(points.get(o2));
+                return points.get(o2).compareTo(points.get(o1));
             }
         });
         return usernameList;

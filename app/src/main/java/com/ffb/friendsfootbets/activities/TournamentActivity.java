@@ -1,23 +1,30 @@
 package com.ffb.friendsfootbets.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ffb.friendsfootbets.LoadFixtures2;
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.adapters.AddMatchAdapter;
 import com.ffb.friendsfootbets.adapters.MatchAdapter;
 import com.ffb.friendsfootbets.adapters.UserAdapter;
 import com.ffb.friendsfootbets.adapters.UserBetsAdapter;
 import com.ffb.friendsfootbets.adapters.UserPointsAdapter;
 import com.ffb.friendsfootbets.databaselink.LoadUsersList;
+import com.ffb.friendsfootbets.databaselink.SaveTournament;
+import com.ffb.friendsfootbets.databaselink.SaveUser;
 import com.ffb.friendsfootbets.models.Match;
 import com.ffb.friendsfootbets.models.Tournament;
 import com.ffb.friendsfootbets.models.User;
@@ -162,13 +169,37 @@ public class TournamentActivity extends AppCompatActivity {
         if (matchesList.size()>0){
             System.out.println("Match :"+matchesList.get(0).toString());
         }
-        MatchAdapter matchAdapter = new MatchAdapter(getApplicationContext(), matchesList, currentUser);
+        AddMatchAdapter matchAdapter = new AddMatchAdapter(getApplicationContext(), matchesList);
         matchesListView.setAdapter(matchAdapter);
         matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                toHide = (RelativeLayout) view.findViewById(R.id.tohide);
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(TournamentActivity.this);
+
+                final EditText edittext = new EditText(TournamentActivity.this);
+                alert.setMessage(" What is your bet ?");
+                alert.setTitle("Bet");
+
+                alert.setView(edittext);
+
+                alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        SaveUser saveUser = new SaveUser();
+                        saveUser.addBet(currentUser, matchesList.get(position), edittext.getText().toString());
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+                alert.show();
+
+
+                /*toHide = (RelativeLayout) view.findViewById(R.id.tohide);
                 boolean a = toHide.getVisibility()==View.GONE;
 
                 for (int i = 0; i < matchesList.size(); i++) {
@@ -230,6 +261,7 @@ public class TournamentActivity extends AppCompatActivity {
                     });
 
 
+
                 }
                 else{
                     //recupere les bets de ce match betterList
@@ -238,10 +270,9 @@ public class TournamentActivity extends AppCompatActivity {
                     bettersListView = (ListView) toHide.findViewById(R.id.bettersList);
                     bettersListView.setAdapter(userBetsAdapter);
                     bettersListView.setVisibility(View.VISIBLE);
-                }
+                }*/
             }
         });
-
 
 
     }

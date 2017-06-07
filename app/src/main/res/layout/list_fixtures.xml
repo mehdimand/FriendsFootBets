@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/slider"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
@@ -15,14 +14,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/date"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:paddingTop="2dip"
-            android:textColor="#5d5d5d"
-            android:textSize="8sp"
-            android:textStyle="bold" />
+        android:id="@+id/date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dip"
+        android:paddingTop="2dip"
+        android:textColor="#5d5d5d"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -33,7 +32,7 @@
 
             <TextView
                 android:id="@+id/hteam"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:gravity="left"
@@ -42,21 +41,21 @@
                 android:paddingTop="2dip"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="8sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ateam"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:gravity="right"
                 android:paddingBottom="2dip"
-                android:paddingRight="10dip"
                 android:paddingTop="2dip"
+                android:paddingRight="10dip"
                 android:textAlignment="textEnd"
+                android:layout_gravity="end"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="8sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -68,7 +67,7 @@
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:textColor="#5d5d5d"
-            android:textSize="8sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -101,8 +100,7 @@
         <ListView
             android:id="@+id/bettersList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="wrap_content" />
 
 
         <ImageButton
@@ -111,8 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/bettersList"
-            app:srcCompat="@android:drawable/arrow_up_float"
-            android:visibility="gone"/>
+            app:srcCompat="@android:drawable/arrow_up_float" />
 
         <ImageButton
             android:id="@+id/imageButton12"
@@ -120,8 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/imageButton11"
-            app:srcCompat="@android:drawable/arrow_down_float"
-            android:visibility="gone"/>
+            app:srcCompat="@android:drawable/arrow_down_float" />
 
         <TextView
             android:id="@+id/parihome"
@@ -131,8 +127,7 @@
             android:layout_toRightOf="@id/imageButton11"
             android:layout_below="@id/bettersList"
             android:text="0"
-            android:textSize="50sp"
-            android:visibility="gone"/>
+            android:textSize="50sp" />
 
 
 
