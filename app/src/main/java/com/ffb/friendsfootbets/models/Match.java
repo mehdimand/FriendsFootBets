@@ -20,6 +20,16 @@ public class Match {
     int scoreHomeTeam;
     int scoreAwayTeam;
 
+    public Match(String matchId, String nameHomeTeam, String nameAwayTeam, String matchDate, String matchHour, int scoreHomeTeam, int scoreAwayTeam) {
+        this.matchId = matchId;
+        this.nameHomeTeam = nameHomeTeam;
+        this.nameAwayTeam = nameAwayTeam;
+        this.matchDate = matchDate;
+        this.matchHour = matchHour;
+        this.scoreHomeTeam = scoreHomeTeam;
+        this.scoreAwayTeam = scoreAwayTeam;
+    }
+
     public Match(String matchId, String nameHomeTeam, String nameAwayTeam, String matchDate, int scoreHomeTeam, int scoreAwayTeam) {
         this.matchId = matchId;
         this.nameHomeTeam = nameHomeTeam;
@@ -107,5 +117,21 @@ public class Match {
 
     public void setScoreAwayTeam(int scoreAwayTeam) {
         this.scoreAwayTeam = scoreAwayTeam;
+    }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "matchId='" + matchId + '\'' +
+                ", nameHomeTeam='" + nameHomeTeam + '\'' +
+                ", crestHomeUrl='" + crestHomeUrl + '\'' +
+                ", nameAwayTeam='" + nameAwayTeam + '\'' +
+                ", crestAwayUrl='" + crestAwayUrl + '\'' +
+                ", bets=" + bets +
+                ", matchDate='" + matchDate + '\'' +
+                ", matchHour='" + matchHour + '\'' +
+                ", scoreHomeTeam=" + scoreHomeTeam +
+                ", scoreAwayTeam=" + scoreAwayTeam +
+                '}';
     }
 }

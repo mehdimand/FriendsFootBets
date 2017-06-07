@@ -9,7 +9,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bloc1"
-        android:layout_width="340dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical">
@@ -21,7 +21,7 @@
             android:paddingLeft="30dp"
             android:paddingTop="2dip"
             android:textColor="#5d5d5d"
-            android:textSize="14sp"
+            android:textSize="8sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/hteam"
-                android:layout_width="170dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:gravity="left"
@@ -42,12 +42,12 @@
                 android:paddingTop="2dip"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="16sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ateam"
-                android:layout_width="170dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:gravity="right"
@@ -56,7 +56,7 @@
                 android:paddingTop="2dip"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="16sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -68,7 +68,7 @@
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:textColor="#5d5d5d"
-            android:textSize="18sp"
+            android:textSize="8sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -83,18 +83,87 @@
 
     <ImageButton
         android:id="@+id/showhide"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_toRightOf="@id/bloc1"
         android:layout_below="@id/state"
         android:layout_weight="1" />
 
-    <ListView
+    <RelativeLayout
         android:id="@+id/tohide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bloc1"
-        android:visibility="gone" />
+        android:paddingLeft="50dip"
+        android:paddingRight="50dip">
+
+        <ListView
+            android:id="@+id/bettersList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+
+        <ImageButton
+            android:id="@+id/imageButton11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/bettersList"
+            app:srcCompat="@android:drawable/arrow_up_float"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/imageButton12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/imageButton11"
+            app:srcCompat="@android:drawable/arrow_down_float"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/parihome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:layout_toRightOf="@id/imageButton11"
+            android:layout_below="@id/bettersList"
+            android:text="0"
+            android:textSize="50sp"
+            android:visibility="gone"/>
+
+
+
+        <ImageButton
+            android:id="@+id/imageButton21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/bettersList"
+            app:srcCompat="@android:drawable/arrow_up_float"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/pariaway"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dip"
+            android:layout_toLeftOf="@id/imageButton21"
+            android:layout_below="@id/bettersList"
+            android:text="0"
+            android:textSize="50sp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/imageButton22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/imageButton21"
+            app:srcCompat="@android:drawable/arrow_down_float"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
 </RelativeLayout>

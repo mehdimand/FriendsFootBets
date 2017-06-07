@@ -158,4 +158,10 @@ public class Tournament implements Serializable {
                 ", points=" + points +
                 '}';
     }
+
+    public void resetPoints() {
+        for (String username : points.keySet()){
+            points.put(username, 0);
+        }
+    }
 }

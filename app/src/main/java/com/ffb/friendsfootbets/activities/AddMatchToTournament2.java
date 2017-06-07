@@ -16,7 +16,9 @@ import android.widget.Toast;
 import com.ffb.friendsfootbets.HttpHandler;
 import com.ffb.friendsfootbets.LoadFixtures;
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.adapters.AddMatchAdapter;
 import com.ffb.friendsfootbets.databaselink.SaveTournament;
+import com.ffb.friendsfootbets.models.Match;
 import com.ffb.friendsfootbets.models.Tournament;
 
 import org.json.JSONArray;
@@ -41,7 +43,7 @@ public class AddMatchToTournament2 extends AppCompatActivity {
     private ListView lv;
 
     private int url;
-    private ArrayList<HashMap<String, String>> list;
+    private HashMap<String, Match> fixturesMap;
 
 
     @Override
@@ -61,10 +63,9 @@ public class AddMatchToTournament2 extends AppCompatActivity {
         loadFixtures.setLoadFixturesListener(new LoadFixtures.LoadFixturesListener() {
 
             @Override
-            public void onFixturesLoaded(ArrayList<HashMap<String, String>> fixturesMapList) {
+            public void onFixturesLoaded(HashMap<String, Match> fixturesMapList) {
                 getFixtures(fixturesMapList);
-                list = fixturesMapList;
-                System.out.println("listener match" + list);
+                fixturesMap = fixturesMapList;
             }
         });
         loadFixtures.loadFixtures(getResources().getString(url));
@@ -80,14 +81,12 @@ public class AddMatchToTournament2 extends AppCompatActivity {
     }
 
 
-    private void getFixtures(final ArrayList<HashMap<String, String>> fixturesMaplist) {
+    private void getFixtures(final HashMap<String, Match> fixturesMaplist) {
 
-        final ListAdapter adapter = new SimpleAdapter(
-                AddMatchToTournament2.this, fixturesMaplist,
-                R.layout.list_fixtures_to_add, new String[]{"home", "away",
-                "date", "heure"}, new int[]{R.id.hteam, R.id.ateam, R.id.date, R.id.heure});
+        final ArrayList<Match> fixturesList = new ArrayList<>(fixturesMaplist.values());
+        AddMatchAdapter addMatchAdapter = new AddMatchAdapter(getApplicationContext(), fixturesList);
 
-        lv.setAdapter(adapter);
+        lv.setAdapter(addMatchAdapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -95,13 +94,12 @@ public class AddMatchToTournament2 extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(AddMatchToTournament2.this, "Match added", Toast.LENGTH_SHORT).show();
 
-                HashMap<String, String> fixtureadded = fixturesMaplist.get(position);
+                Match fixtureAdded = fixturesList.get(position);
 
-                String idmatch = fixtureadded.get("id");
+                String matchId = fixtureAdded.getMatchId();
 
                 SaveTournament saveTournament = new SaveTournament();
-                saveTournament.addMatchtoTournament(currentTournament, idmatch.split("fixtures/")[1]);
-                System.out.println(idmatch.split("fixtures/")[1]);
+                saveTournament.addMatchtoTournament(currentTournament, matchId);
             }
 
         });

@@ -23,6 +23,7 @@ public class User implements Serializable{
 
     public User(String username) {
         this.username = username;
+        this.bets = new HashMap<>();
     }
 
     public User(String name, String username, String email, boolean profilePicture) {
@@ -30,6 +31,7 @@ public class User implements Serializable{
         this.username = username;
         this.email = email;
         this.profilePicture = profilePicture;
+        this.bets = new HashMap<>();
     }
 
     public String getName() {

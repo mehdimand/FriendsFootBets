@@ -32,6 +32,7 @@ public class HttpHandler {
         try {
             URL url = new URL(reqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("X-Auth-Token", "50fc27edc50348f4b1e49fead734d44e");
             conn.setRequestMethod("GET");
             // read the response
             input = new BufferedInputStream(conn.getInputStream());

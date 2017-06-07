@@ -23,30 +23,29 @@ import java.util.HashMap;
  * Created by Younes and Mehdi on 12/05/2017.
  */
 // Adapted from : http://tutos-android-france.com/listview-afficher-une-liste-delements/
-public class UserPointsAdapter extends ArrayAdapter<User> {
-
-    private HashMap<String, Integer> points;
-
+public class UserBetsAdapter extends ArrayAdapter<User> {
+    private HashMap<User, String> bets;
     //Users est la liste des models à afficher
-    public UserPointsAdapter(Context context, ArrayList<User> users, HashMap<String, Integer> points) {
+    public UserBetsAdapter(Context context, ArrayList<User> users, HashMap<User, String> bets) {
         super(context, 0, users);
-        this.points = points;
-
+        this.bets = bets;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_users_row,parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.match_bets,parent, false);
         }
 
         UserViewHolder viewHolder = (UserViewHolder) convertView.getTag();
         if(viewHolder == null){
             viewHolder = new UserViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.points = (TextView) convertView.findViewById(R.id.username);
+            viewHolder.username = (TextView) convertView.findViewById(R.id.username);
             viewHolder.profilePicture = (ImageView) convertView.findViewById(R.id.profilePicture);
+            viewHolder.scoreAway = (TextView) convertView.findViewById(R.id.scoreaway);
+            viewHolder.scoreHome = (TextView) convertView.findViewById(R.id.scorehome);
             convertView.setTag(viewHolder);
         }
 
@@ -54,7 +53,9 @@ public class UserPointsAdapter extends ArrayAdapter<User> {
         User user = getItem(position);
         //il ne reste plus qu'à remplir notre vue
         viewHolder.name.setText(user.getName());
-        viewHolder.points.setText((points.get(user.getUsername())).toString());
+        viewHolder.username.setText(user.getUsername());
+        viewHolder.scoreAway.setText(bets.get(user).split("-")[1]);
+        viewHolder.scoreHome.setText(bets.get(user).split("-")[0]);
         displayProfilePicture(user, viewHolder.profilePicture);
 
 
@@ -88,8 +89,10 @@ public class UserPointsAdapter extends ArrayAdapter<User> {
 
     private class UserViewHolder{
         protected TextView name;
-        protected TextView points;
+        protected TextView username;
         protected ImageView profilePicture;
+        protected TextView scoreAway;
+        protected TextView scoreHome;
 
     }
 
