@@ -53,28 +53,37 @@ public class LoadUsersList {
     // this attribute enables to count how many tournaments have been downloaded from the database
     int usersLoadedCounter;
     int usersNumber;
-    public void loadUsers(ArrayList<String> usernamesList){
+    public void loadUsers(ArrayList<String> usernamesList, boolean withMatches){
         // We  initiate the counter
         usersLoadedCounter = 0;
         usersListMap = new HashMap<>();
 
         // We compute the number of users to load in order to know when to stop
-        usersNumber = usernamesList.size();
+        if (usernamesList != null){
+            usersNumber = usernamesList.size();
+        }else{
+            usersNumber = 0;
+        }
 
-        String tournamentId;
-        for (int i = 0; i < usernamesList.size(); i++){
+
+        for (int i = 0; i < usersNumber ; i++){
             String username = usernamesList.get(i);
             User user = new User(username);
             usersListMap.put(username, user);
 
-            loadUser(username);
+            loadUser(username, withMatches);
+        }
+
+        // we need to multiply this variable because there will be twice as much calls in this case
+        if (withMatches){
+            usersNumber = usersNumber*2;
         }
 
     }
     /*
      * This method loads from the database a single tournament.
      */
-    public void loadUser(final String username){
+    public void loadUser(final String username, final boolean withMatches){
         // We set the references for the data we want from the database
         DatabaseReference usersRef = mDatabase.child("users").child(username);
 
@@ -102,8 +111,40 @@ public class LoadUsersList {
             }
         };
 
+
         // We associate the two
         usersRef.addListenerForSingleValueEvent(usersListener);
+
+        if (withMatches){
+            DatabaseReference userMatchesRef = mDatabase.child("userMatches").child(username);
+            ValueEventListener userMatchesListener = new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get User object
+                    User user = usersListMap.get(username);
+
+                    HashMap<String, String> betsMap = new HashMap<>();
+                    for (DataSnapshot betsDataSnapshot : dataSnapshot.getChildren()) {
+                        String matchId = betsDataSnapshot.getKey();
+                        String bet = (String) betsDataSnapshot.getValue();
+                        betsMap.put(matchId, bet);
+                    }
+                    user.setBets(betsMap);
+
+                    userLoadedTrigger();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            };
+            userMatchesRef.addListenerForSingleValueEvent(userMatchesListener);
+        }
     }
 
     private void userLoadedTrigger(){
@@ -117,20 +158,28 @@ public class LoadUsersList {
         }
     }
 
-    public void searchUsername(String usernameQuery){
-        Query query = mDatabase.child("users").orderByKey().startAt(null, usernameQuery).endAt(null, usernameQuery+'~');
+    public void searchUsername(String usernameQuery, int maxNumber){
+        usersListMap = new HashMap<>();
+        Query query = mDatabase.child("users").orderByKey().startAt(usernameQuery).endAt(usernameQuery+"~").limitToFirst(maxNumber);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String username = "";
-                ArrayList<String> usernameList = new ArrayList<String>();
                 for (DataSnapshot usersSnapshot : dataSnapshot.getChildren()) {
                     username = usersSnapshot.getKey();
-                    usernameList.add(username);
+                    User user = new User(username);
+
+                    user.setName((String) usersSnapshot.child("name").getValue());
+                    user.setEmail((String) usersSnapshot.child("email").getValue());
+                    // In some cases the profilePicture key isn't set (when no picture is chosen)
+                    Object tempBoolProfilePicture = usersSnapshot.child("profilePicture").getValue();
+                    user.setProfilePicture((tempBoolProfilePicture != null) && (boolean) tempBoolProfilePicture);
+
+                    usersListMap.put(username, user);
                 }
 
-                if (usernameList.size() > 0){
-                    loadUsers(usernameList);
+                if (usersListMap.size() > 0){
+                    listener.onUsersListLoaded(usersListMap);
                 }
 
             }

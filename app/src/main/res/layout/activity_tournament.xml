@@ -28,7 +28,8 @@
                 android:text="tournament1"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30dip"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,7 +37,8 @@
                 android:gravity="right"
                 android:orientation="horizontal"
                 android:paddingEnd="5dip"
-                android:paddingRight="5dip">
+                android:paddingRight="5dip"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,9 +62,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dip"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/users_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dip"
@@ -87,14 +91,16 @@
             <ListView
                 android:id="@+id/usersList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
             </ListView>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,7 +127,8 @@
             <ListView
                 android:id="@+id/matchesList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
             </ListView>
 
             <TextView
@@ -131,12 +138,14 @@
                 android:layout_marginTop="10dip"
                 android:text="Classement"
                 android:textColor="@color/black"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:layout_weight="1"/>
 
             <ListView
                 android:id="@+id/rankingList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
             </ListView>
 
 

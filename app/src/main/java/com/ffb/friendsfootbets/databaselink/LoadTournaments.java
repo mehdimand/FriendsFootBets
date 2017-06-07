@@ -84,6 +84,8 @@ public class LoadTournaments {
         // We set the references for the data we want from the database
         DatabaseReference tournamentRef = mDatabase.child("tournaments").child(tournamentId);
         DatabaseReference tournamentMatchesRef = mDatabase.child("tournamentMatches").child(tournamentId);
+        DatabaseReference tournamentAddedUsersRef = mDatabase.child("tournamentUsers").child(tournamentId).child("usersPoints");
+        DatabaseReference tournamentInvitedUsersRef = mDatabase.child("tournamentUsers").child(tournamentId).child("invitedUsers");
 
         // We create the listeners that will fetch the data we need
         ValueEventListener tournamentListener = new ValueEventListener() {
@@ -130,10 +132,62 @@ public class LoadTournaments {
                 // ...
             }
         };
+        ValueEventListener tournamentAddedUsersListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Tournament object
+                Tournament tournament = tournamentsMap.get(tournamentId);
+
+                HashMap<String, Integer> tournamentPointsMap = new HashMap<>();
+                for (DataSnapshot tournamentPointsDataSnapshot : dataSnapshot.getChildren()) {
+                    String username = tournamentPointsDataSnapshot.getKey();
+                    int points = (int) (long) tournamentPointsDataSnapshot.getValue();// in Firebase it is a Long object, trick to cast Long to Integer
+                    tournamentPointsMap.put(username, points);
+                }
+                tournament.setPoints(tournamentPointsMap);
+                tournamentLoadedTrigger();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        ValueEventListener tournamentInvitedUsersListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Tournament object
+                Tournament tournament = tournamentsMap.get(tournamentId);
+
+                ArrayList<String> tournamentInvitedUsersList = new ArrayList<>();
+                for (DataSnapshot tournamentInvitedUsersDataSnapshot : dataSnapshot.getChildren()) {
+                    String username = tournamentInvitedUsersDataSnapshot.getKey();
+                    tournamentInvitedUsersList.add(username);
+                }
+                tournament.setInvitedUserArray(tournamentInvitedUsersList);
+                tournamentLoadedTrigger();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+
 
         // We associate the two
         tournamentRef.addListenerForSingleValueEvent(tournamentListener);
         tournamentMatchesRef.addListenerForSingleValueEvent(tournamentMatchesListener);
+        tournamentAddedUsersRef.addListenerForSingleValueEvent(tournamentAddedUsersListener);
+        tournamentInvitedUsersRef.addListenerForSingleValueEvent(tournamentInvitedUsersListener);
     }
 
     private void tournamentLoadedTrigger(){
@@ -142,7 +196,7 @@ public class LoadTournaments {
 
         // The third time this method is called we can trigger onUserLoaded to enable the activity
         // to resume
-        if (tournamentLoadedCounter == 2*tournamentNumber && listener != null){
+        if (tournamentLoadedCounter == 4*tournamentNumber && listener != null){
             listener.onTournamentsLoaded(tournamentsMap);
             // TODO : load matches and compute tournament state
         }

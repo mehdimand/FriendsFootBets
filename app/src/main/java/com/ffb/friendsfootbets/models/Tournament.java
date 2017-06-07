@@ -2,15 +2,18 @@ package com.ffb.friendsfootbets.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Younes and Mehdi on 06/05/2017.
  */
 
 public class Tournament implements Serializable {
-    /* The 3 possible states for a tournament, the getState(User user) method returns the state that
-     * correspond to the user.
+    /* The 3 possible states for a tournament, the getState(String username) method returns the state that
+     * correspond to the username.
      */
     public final static int MATCHES_FINISHED = 1;
     public final static int BETTING_FINISHED = 2;
@@ -21,10 +24,10 @@ public class Tournament implements Serializable {
     String tournamentName;
     String tournamentAdminUsername;
     ArrayList<String> matchArray;
-    ArrayList<User> userArray;
-    ArrayList<User> invitedUserArray;
+    ArrayList<String> invitedUserArray;
     int state;
-    HashMap<User, Integer> points;
+    // points is also used to get the list of the users
+    HashMap<String, Integer> points;
 
     public Tournament(String touranmentId) {
         this.touranmentId = touranmentId;
@@ -33,6 +36,10 @@ public class Tournament implements Serializable {
     public Tournament(String tournamentName, String tournamentAdminUsername) {
         this.tournamentName = tournamentName;
         this.tournamentAdminUsername = tournamentAdminUsername;
+        this.matchArray = new ArrayList<>();
+        this.invitedUserArray = new ArrayList<>();
+        this.points = new HashMap<>();
+        addUser(tournamentAdminUsername);
     }
 
     public String getTouranmentId() {
@@ -67,43 +74,43 @@ public class Tournament implements Serializable {
         this.matchArray = matchArray;
     }
 
-    public ArrayList<User> getUserArray() {
-        return userArray;
+    public ArrayList<String> getUserArray() {
+        return new ArrayList<>(points.keySet());
     }
 
-    public void setUserArray(ArrayList<User> userArray) {
-        this.userArray = userArray;
+    public void addUser(String username) {
+        this.points.put(username, 0);
     }
 
-    public void addUser(User user) {
-        this.userArray.add(user);
-    }
-
-    public ArrayList<User> getInvitedUserArray() {
+    public ArrayList<String> getInvitedUserArray() {
         return invitedUserArray;
     }
 
-    public void setInvitedUserArray(ArrayList<User> invitedUserArray) {
+    public void setInvitedUserArray(ArrayList<String> invitedUserArray) {
         this.invitedUserArray = invitedUserArray;
     }
 
-    public void addInvitedUser(User user) {
-        this.invitedUserArray.add(user);
+    public void addInvitedUser(String username) {
+        this.invitedUserArray.add(username);
     }
 
-    public HashMap<User, Integer> getPoints() {
+    public HashMap<String, Integer> getPoints() {
         return points;
     }
 
+    public void setPoints(HashMap<String, Integer> points) {
+        this.points = points;
+    }
+
     /*
-    * Adds points for one user. If the user isn't in the map, he will be added
-    * */
-    public void addPointsForUser(User user, Integer additionalPoints) {
-        Integer currentPoints = this.points.get(user);
+        * Adds points for one username. If the username isn't in the map, he will be added
+        * */
+    public void addPointsForUser(String username, Integer additionalPoints) {
+        Integer currentPoints = this.points.get(username);
         if (currentPoints != null) {
-            this.points.put(user, currentPoints + additionalPoints);
+            this.points.put(username, currentPoints + additionalPoints);
         } else {
-            this.points.put(user, additionalPoints);
+            this.points.put(username, additionalPoints);
         }
     }
 
@@ -115,9 +122,15 @@ public class Tournament implements Serializable {
         this.state = state;
     }
 
-    //TODO tri sur place de userArray
-    public void sortUsersByPoints(){
-
+    public ArrayList<String> sortUsersByPoints(){
+        ArrayList<String> usernameList = new ArrayList<>(points.keySet());
+        Collections.sort(usernameList, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return points.get(o1).compareTo(points.get(o2));
+            }
+        });
+        return usernameList;
     }
 
     public HashMap<Integer, Match> getMatchesFromAPI(){
@@ -133,4 +146,16 @@ public class Tournament implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "touranmentId='" + touranmentId + '\'' +
+                ", tournamentName='" + tournamentName + '\'' +
+                ", tournamentAdminUsername='" + tournamentAdminUsername + '\'' +
+                ", matchArray=" + matchArray +
+                ", invitedUserArray=" + invitedUserArray +
+                ", state=" + state +
+                ", points=" + points +
+                '}';
+    }
 }

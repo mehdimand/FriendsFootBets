@@ -17,16 +17,20 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Younes and Mehdi on 12/05/2017.
  */
 // Adapted from : http://tutos-android-france.com/listview-afficher-une-liste-delements/
-public class UserAdapter extends ArrayAdapter<User> {
+public class UserPointsAdapter extends ArrayAdapter<User> {
+
+    private HashMap<String, Integer> points;
 
     //Users est la liste des models à afficher
-    public UserAdapter(Context context, ArrayList<User> users) {
+    public UserPointsAdapter(Context context, ArrayList<User> users, HashMap<String, Integer> points) {
         super(context, 0, users);
+
     }
 
     @Override
@@ -40,7 +44,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         if(viewHolder == null){
             viewHolder = new UserViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.username = (TextView) convertView.findViewById(R.id.username);
+            viewHolder.points = (TextView) convertView.findViewById(R.id.username);
             viewHolder.profilePicture = (ImageView) convertView.findViewById(R.id.profilePicture);
             convertView.setTag(viewHolder);
         }
@@ -49,7 +53,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         User user = getItem(position);
         //il ne reste plus qu'à remplir notre vue
         viewHolder.name.setText(user.getName());
-        viewHolder.username.setText(user.getUsername());
+        viewHolder.points.setText(points.get(user.getUsername()));
         displayProfilePicture(user, viewHolder.profilePicture);
 
 
@@ -83,7 +87,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 
     private class UserViewHolder{
         protected TextView name;
-        protected TextView username;
+        protected TextView points;
         protected ImageView profilePicture;
 
     }

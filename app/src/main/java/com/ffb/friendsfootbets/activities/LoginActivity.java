@@ -244,10 +244,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
             } catch (Exception e) {
-                System.out.println("case 2");
-                System.out.println("Email : "+mEmail);
-                System.out.println("Password : "+mPassword);
-                System.out.println(e.toString());
             }
             return true;
         }

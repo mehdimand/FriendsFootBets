@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.ffb.friendsfootbets.activities.MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+
+    <Button
+        android:id="@+id/modify_profile_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/modify_profile_prompt"
+        android:textStyle="bold"
+        android:onClick="onClick" />
+
+    <Button
+        android:id="@+id/create_tournament_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/create_tournament_prompt"
+        android:textStyle="bold"
+        android:onClick="onClick" />
+
+    <ListView
+        android:id="@+id/tournamentsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/modify_profile_button"
-            style="?android:textAppearanceSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/modify_profile_prompt"
-            android:textStyle="bold"
-            android:onClick="onClick" />
-
-        <ListView
-            android:id="@+id/tournamentsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>
-
-        <ListView
-            android:id="@+id/rankingsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>
-
-
-    </LinearLayout>
+    </ListView>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -50,4 +47,4 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
