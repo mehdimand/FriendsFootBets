@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ffb.friendsfootbets.activities.AddMatchToTournament2;
+import com.ffb.friendsfootbets.models.Match;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 public class LoadFixtures {
 
     private LoadFixturesListener listener;
-    public ArrayList<HashMap<String, String>> fixtures_list;
+    public HashMap<String, Match> fixtures_list;
 
     public LoadFixtures() {
         this.listener = null;
@@ -41,22 +42,24 @@ public class LoadFixtures {
      */
     public interface LoadFixturesListener {
         // This trigger will be used every time we finish loading the tournaments related to a user
-        public void onFixturesLoaded(ArrayList<HashMap<String, String>> fixtures_list);
+        public void onFixturesLoaded(HashMap<String, Match> fixtures_list);
     }
 
     private String TAG = AddMatchToTournament2.class.getSimpleName();
 
     private ProgressDialog pDialog;
 
-    private Integer url;
+    private String url;
     private LoadFixturesA loadFixturesA;
 
 
-    public void loadFixtures(int url){
+    public void loadFixtures(String url){
         this.url = url;
+        fixtures_list = new HashMap<String, Match>();
         System.out.println("aaa"+this.url);
         loadFixturesA.execute();
     }
+
 
     private class LoadFixturesA extends AsyncTask<Void, Void, Void>{
 
@@ -72,7 +75,7 @@ public class LoadFixtures {
 
             // Making a request to url and getting response
             // faut récuperer l'url des matchs pour chaque compétition
-            String jsonStr = sh.makeServiceCall(Integer.toString(url));
+            String jsonStr = sh.makeServiceCall(url);
 
             Log.e(TAG, "Response from url: " + jsonStr);
 
@@ -88,21 +91,27 @@ public class LoadFixtures {
                         JSONObject f = fixtures.getJSONObject(i);
 
                         String status = f.getString("status");
+
+                        JSONObject links = f.getJSONObject("_links");
+                        JSONObject self = links.getJSONObject("self");
+                        String url = self.getString("href");
+                        String id = url.split("fixtures/")[1];
+
+                        Integer goalsHome;
+                        Integer goalsAway;
+                        String home = "";
+                        String away = "";
+                        String date= "";
+                        String heure = "";
+
                         // timed or scheduled pour les matchs à venir
                         if (status.equals("TIMED") || status.equals("FINISHED")) {
 
                             min++;
 
-                            String home = f.getString("homeTeamName");
-                            String away = f.getString("awayTeamName");
+                            home = f.getString("homeTeamName");
+                            away = f.getString("awayTeamName");
                             String dateetheure = f.getString("date");
-
-                            // tmp hash map for single fixture
-                            HashMap<String, String> fixture = new HashMap<>();
-
-                            // adding each child node to HashMap key => value
-                            fixture.put("home", home);
-                            fixture.put("away", away);
 
                             SimpleDateFormat formatdate =
                                     new SimpleDateFormat("EEE d MMM ");
@@ -115,19 +124,28 @@ public class LoadFixtures {
 
                             try {
                                 Date dateobject = dt.parse(dateetheure);
-                                String date = formatdate.format(dateobject);
-                                String heure = formatheure.format(dateobject);
-                                fixture.put("date", date);
-                                fixture.put("heure", heure);
+                                date = formatdate.format(dateobject);
+                                heure = formatheure.format(dateobject);
 
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
 
-                            // adding team to teamTable
-                            fixtures_list.add(fixture);
                         }
-                        System.out.println("aaaaaaa"+fixtures_list);
+
+                        if (status.equals("FINISHED")){
+                            JSONObject result = f.getJSONObject("result");
+                            goalsHome = result.getInt("goalsHomeTeam");
+                            goalsAway = result.getInt("goalsAwayTeam");
+                        }
+                        else {
+                            goalsHome = -1;
+                            goalsAway = -1;
+                        }
+
+                        Match match = new Match(id,home,away,date,heure,goalsHome,goalsAway);
+
+                        fixtures_list.put(id,match);
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
