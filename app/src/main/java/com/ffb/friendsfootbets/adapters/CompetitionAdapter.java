@@ -3,7 +3,7 @@ package com.ffb.friendsfootbets.adapters;
 
 /**
  * Created by mehdimand on 11/05/2017.
- * Class appelée par AddMatchToTournament
+ * Class appelée par ChooseCompetitionActivity
  *
  * https://www.learn2crack.com/2013/10/android-custom-listview-images-text-example.html
  */
@@ -19,18 +19,18 @@ import android.widget.TextView;
 
 import com.ffb.friendsfootbets.R;
 
-public class CustomList extends ArrayAdapter<String> {
+import java.util.ArrayList;
+
+public class CompetitionAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final String[] tx1;
-    private final Integer[] imageId1;
+    private final ArrayList<String> tx1;
 
 
-    public CustomList(Activity context, String[] tx1, Integer[] imageId1) {
+    public CompetitionAdapter(Activity context, ArrayList<String> tx1) {
         super(context, R.layout.list_comp, tx1);
         this.context = context;
         this.tx1 = tx1;
-        this.imageId1 = imageId1;
     }
 
     @Override
@@ -40,11 +40,12 @@ public class CustomList extends ArrayAdapter<String> {
         TextView txtTitle1 = (TextView) rowView.findViewById(R.id.namecomp);
 
 
-        txtTitle1.setText(tx1[position]);
+        txtTitle1.setText(tx1.get(position));
 
         ImageView imageView1 = (ImageView) rowView.findViewById(R.id.iconcomp);
 
-        imageView1.setImageResource(imageId1[position]);
+        //TODO : find an image more appropriate
+        imageView1.setImageResource(R.drawable.logo_ldc);
 
         return rowView;
     }

@@ -7,9 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ffb.friendsfootbets.LoadFixtures;
+import com.ffb.friendsfootbets.LoadUpcomingFixtures;
 import com.ffb.friendsfootbets.R;
 import com.ffb.friendsfootbets.adapters.AddMatchAdapter;
 import com.ffb.friendsfootbets.databaselink.SaveTournament;
@@ -19,33 +20,36 @@ import com.ffb.friendsfootbets.models.Tournament;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddMatchToTournament2 extends AppCompatActivity {
+public class AddMatchToTournament extends AppCompatActivity {
 
-    private String TAG = AddMatchToTournament2.class.getSimpleName();
+    private String TAG = AddMatchToTournament.class.getSimpleName();
     private Tournament currentTournament;
 
     private ProgressDialog pDialog;
     private ListView lv;
+    private TextView noFixturesTextView;
 
-    private String url;
+    // can be the URL for all the fixtures of one competition or of one team
+    private String fixturesURL;
     private HashMap<String, Match> fixturesMap;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_match_to_tournament2);
+        setContentView(R.layout.activity_add_match_to_tournament);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        url = extras.getString("url");
+        fixturesURL = extras.getString("url");
 
 
         lv = (ListView) findViewById(R.id.list2);
+        noFixturesTextView = (TextView) findViewById(R.id.no_fixtures);
 
-        LoadFixtures loadFixtures = new LoadFixtures();
-        loadFixtures.setLoadFixturesListener(new LoadFixtures.LoadFixturesListener() {
+        LoadUpcomingFixtures loadFixtures = new LoadUpcomingFixtures();
+        loadFixtures.setLoadFixturesListener(new LoadUpcomingFixtures.LoadFixturesListener() {
 
             @Override
             public void onFixturesLoaded(HashMap<String, Match> fixturesMapList) {
@@ -53,7 +57,7 @@ public class AddMatchToTournament2 extends AppCompatActivity {
                 fixturesMap = fixturesMapList;
             }
         });
-        loadFixtures.loadFixtures(url);
+        loadFixtures.loadFixtures(fixturesURL);
     }
 
     @Override
@@ -63,31 +67,37 @@ public class AddMatchToTournament2 extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         currentTournament = (Tournament) extras.getSerializable("tournament");
+
+        noFixturesTextView.setVisibility(View.GONE);
     }
 
 
     private void getFixtures(final HashMap<String, Match> fixturesMaplist) {
 
-        final ArrayList<Match> fixturesList = new ArrayList<>(fixturesMaplist.values());
-        AddMatchAdapter addMatchAdapter = new AddMatchAdapter(getApplicationContext(), fixturesList);
+        if (fixturesMaplist.size() != 0){
+            final ArrayList<Match> fixturesList = new ArrayList<>(fixturesMaplist.values());
+            AddMatchAdapter addMatchAdapter = new AddMatchAdapter(getApplicationContext(), fixturesList);
 
-        lv.setAdapter(addMatchAdapter);
+            lv.setAdapter(addMatchAdapter);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(AddMatchToTournament2.this, "Match added", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(AddMatchToTournament.this, "Match added", Toast.LENGTH_SHORT).show();
 
-                Match fixtureAdded = fixturesList.get(position);
+                    Match fixtureAdded = fixturesList.get(position);
 
-                String matchId = fixtureAdded.getMatchId();
+                    String matchId = fixtureAdded.getMatchId();
 
-                SaveTournament saveTournament = new SaveTournament();
-                saveTournament.addMatchtoTournament(currentTournament, matchId);
-            }
+                    SaveTournament saveTournament = new SaveTournament();
+                    saveTournament.addMatchtoTournament(currentTournament, matchId);
+                }
 
-        });
+            });
+        }else {
+            noFixturesTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
