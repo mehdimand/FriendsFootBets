@@ -38,5 +38,6 @@
     <string name="url_ldc">http://api.football-data.org/v1/competitions/440/fixtures</string>
 
     <string name="error">Le serveur nous a laché :(</string>
+    <string name="no_fixtures">No fixtures available in the next 7 days.</string>
 
 </resources>

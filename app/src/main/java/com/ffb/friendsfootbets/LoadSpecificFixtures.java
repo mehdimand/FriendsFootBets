@@ -4,10 +4,9 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ffb.friendsfootbets.activities.AddMatchToTournament2;
+import com.ffb.friendsfootbets.activities.AddMatchToTournament;
 import com.ffb.friendsfootbets.models.Match;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,12 +20,13 @@ import java.util.HashMap;
  * Created by mehdimand on 07/06/2017.
  */
 
-public class LoadFixtures {
+
+public class LoadSpecificFixtures {
 
     private LoadFixturesListener listener;
     public HashMap<String, Match> fixtures_list;
 
-    public LoadFixtures() {
+    public LoadSpecificFixtures() {
         this.listener = null;
         this.loadFixturesA = new LoadFixturesA();
     }
@@ -45,69 +45,55 @@ public class LoadFixtures {
         public void onFixturesLoaded(HashMap<String, Match> fixtures_list);
     }
 
-    private String TAG = AddMatchToTournament2.class.getSimpleName();
+    private String TAG = AddMatchToTournament.class.getSimpleName();
 
     private ProgressDialog pDialog;
 
-    private String url;
+    private ArrayList<String> listUrl;
     private LoadFixturesA loadFixturesA;
 
 
-    public void loadFixtures(String url){
-        this.url = url;
+    public void loadFixtures(ArrayList<String> listUrl) {
+        this.listUrl = listUrl;
         fixtures_list = new HashMap<String, Match>();
-        System.out.println("aaa"+this.url);
         loadFixturesA.execute();
     }
 
 
-    private class LoadFixturesA extends AsyncTask<Void, Void, Void>{
+    private class LoadFixturesA extends AsyncTask<Void, Void, Void> {
 
 
-        protected void onPreExecute () {
+        protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
         }
 
-        protected Void doInBackground (Void...arg0){
-            System.out.println("aaawaw");
+        protected Void doInBackground(Void... arg0) {
             HttpHandler sh = new HttpHandler();
 
-            // Making a request to url and getting response
-            // faut récuperer l'url des matchs pour chaque compétition
-            String jsonStr = sh.makeServiceCall(url);
+            for (int i = 0; i < listUrl.size(); i++) {
 
-            Log.e(TAG, "Response from url: " + jsonStr);
+                String jsonStr = sh.makeServiceCall(
+                        "http://api.football-data.org/v1/fixtures/" + listUrl.get(i));
+                Log.e(TAG, "Response from url: " + jsonStr);
 
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
+                if (jsonStr != null) {
+                    try {
+                        JSONObject json = new JSONObject(jsonStr);
+                        JSONObject f = json.getJSONObject("fixture");
 
-                    // Getting JSON Array node
-                    JSONArray fixtures = jsonObj.getJSONArray("fixtures");
-                    int min = 0;
-                    // looping through All the table
-                    for (int i = 0; i < fixtures.length() && min < 12; i++) {
-                        JSONObject f = fixtures.getJSONObject(i);
 
                         String status = f.getString("status");
-
-                        JSONObject links = f.getJSONObject("_links");
-                        JSONObject self = links.getJSONObject("self");
-                        String url = self.getString("href");
-                        String id = url.split("fixtures/")[1];
 
                         Integer goalsHome;
                         Integer goalsAway;
                         String home = "";
                         String away = "";
-                        String date= "";
+                        String date = "";
                         String heure = "";
 
                         // timed or scheduled pour les matchs à venir
                         if (status.equals("TIMED") || status.equals("FINISHED")) {
-
-                            min++;
 
                             home = f.getString("homeTeamName");
                             away = f.getString("awayTeamName");
@@ -133,39 +119,41 @@ public class LoadFixtures {
 
                         }
 
-                        if (status.equals("FINISHED")){
+                        if (status.equals("FINISHED")) {
                             JSONObject result = f.getJSONObject("result");
                             goalsHome = result.getInt("goalsHomeTeam");
                             goalsAway = result.getInt("goalsAwayTeam");
-                        }
-                        else {
+                        } else {
                             goalsHome = -1;
                             goalsAway = -1;
                         }
 
-                        Match match = new Match(id,home,away,date,heure,goalsHome,goalsAway);
+                        Match match = new Match(listUrl.get(i), home, away, date, heure, goalsHome, goalsAway);
 
-                        fixtures_list.put(id,match);
+                        fixtures_list.put(listUrl.get(i), match);
+
+                        System.out.println("Match added to list "+fixtures_list.toString());
+
+                    } catch (final JSONException e) {
+                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+
                     }
-                } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                } else {
+                    Log.e(TAG, "Couldn't get json from server.");
 
                 }
-            } else {
-                Log.e(TAG, "Couldn't get json from server.");
 
             }
-
             return null;
-
         }
 
         @Override
-        protected void onPostExecute (Void result){
+        protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            if (listener != null){
+            if (listener != null) {
                 listener.onFixturesLoaded(fixtures_list);
+
             }
 
         }

@@ -1,78 +1,59 @@
 package com.ffb.friendsfootbets.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ffb.friendsfootbets.adapters.CustomList;
+import com.ffb.friendsfootbets.LoadFixtures;
 import com.ffb.friendsfootbets.R;
+import com.ffb.friendsfootbets.adapters.AddMatchAdapter;
+import com.ffb.friendsfootbets.databaselink.SaveTournament;
+import com.ffb.friendsfootbets.models.Match;
 import com.ffb.friendsfootbets.models.Tournament;
-import com.ffb.friendsfootbets.models.User;
 
-public class AddMatchToTournament extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    Tournament currentTournament;
-    User currentUser;
-    ListView list;
-    String[] txt = {
-            "Ligue des Champions",
-            "Premier League",
-            "Liga",
-            "Ligue 1",
-            "FA Cup",
-            "Bundesliga",
-            "Serie A"
-    };
-    Integer[] imageId = {
-            R.drawable.logo_ldc,
-            R.drawable.logo_pl,
-            R.drawable.logo_liga,
-            R.drawable.logo_ligue1,
-            R.drawable.logo_facup,
-            R.drawable.logo_bundesliga,
-            R.drawable.logo_seriea
-    };
+public class AddMatchToTournament2 extends AppCompatActivity {
 
-    Integer[] imageUrl = {
-            R.string.url_ldc,
-            R.string.url_pl,
-            R.string.url_liga,
-            R.string.url_l1,
-            R.string.url_facup,
-            R.string.url_bundesliga,
-            R.string.url_seriea
-    };
+    private String TAG = AddMatchToTournament2.class.getSimpleName();
+    private Tournament currentTournament;
 
-    public final static String Url_fixtures = "matches" ;
+    private ProgressDialog pDialog;
+    private ListView lv;
+
+    private String url;
+    private HashMap<String, Match> fixturesMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_match_to_tournament);
+        setContentView(R.layout.activity_add_match_to_tournament2);
 
-        CustomList adapter = new
-                CustomList (AddMatchToTournament.this, txt, imageId);
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        url = extras.getString("url");
+
+
+        lv = (ListView) findViewById(R.id.list2);
+
+        LoadFixtures loadFixtures = new LoadFixtures();
+        loadFixtures.setLoadFixturesListener(new LoadFixtures.LoadFixturesListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(AddMatchToTournament.this, "You Clicked at " + txt[+position], Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AddMatchToTournament.this, AddMatchToTournament2.class);
-                intent.putExtra(Url_fixtures,imageUrl[position]);
-                intent.putExtra("tournament", currentTournament);
-                intent.putExtra("user", currentUser);
-                startActivity(intent);
+            public void onFixturesLoaded(HashMap<String, Match> fixturesMapList) {
+                getFixtures(fixturesMapList);
+                fixturesMap = fixturesMapList;
             }
         });
-
+        loadFixtures.loadFixtures(url);
     }
 
     @Override
@@ -82,7 +63,31 @@ public class AddMatchToTournament extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         currentTournament = (Tournament) extras.getSerializable("tournament");
-
-        System.out.println("add1 "+currentTournament.toString());
     }
+
+
+    private void getFixtures(final HashMap<String, Match> fixturesMaplist) {
+
+        final ArrayList<Match> fixturesList = new ArrayList<>(fixturesMaplist.values());
+        AddMatchAdapter addMatchAdapter = new AddMatchAdapter(getApplicationContext(), fixturesList);
+
+        lv.setAdapter(addMatchAdapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(AddMatchToTournament2.this, "Match added", Toast.LENGTH_SHORT).show();
+
+                Match fixtureAdded = fixturesList.get(position);
+
+                String matchId = fixtureAdded.getMatchId();
+
+                SaveTournament saveTournament = new SaveTournament();
+                saveTournament.addMatchtoTournament(currentTournament, matchId);
+            }
+
+        });
+    }
+
 }

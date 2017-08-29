@@ -3,6 +3,7 @@ package com.ffb.friendsfootbets.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,6 +42,12 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+    // login saving
+    private CheckBox saveLoginCheckBox;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +70,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        saveLoginCheckBox = (CheckBox)findViewById(R.id.saveLoginCheckBox);
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
     }
 
     @Override
@@ -70,6 +83,12 @@ public class LoginActivity extends AppCompatActivity {
         // When we come back on the activity after exiting the application, the password has to be
         // written again
         mPasswordView.setText("");
+
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin == true) {
+            mEmailView.setText(loginPreferences.getString("username", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
 
         // We reinitialize the Firebase Authentication instance
         mAuth.signOut();
@@ -160,6 +179,16 @@ public class LoginActivity extends AppCompatActivity {
         // If the user only signs in
         if (user != null && verifiedMail) {
             Toast.makeText(getApplicationContext(), getString(R.string.authentication_success), Toast.LENGTH_SHORT).show();
+
+            // we save the login information
+            if (saveLoginCheckBox.isChecked()) {
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", user.getEmail());
+                loginPrefsEditor.commit();
+            } else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+            }
 
             // Explicit intent to go to the home page of the app
             Intent mainActivityIntent = new Intent(LoginActivity.this, MainActivity.class);

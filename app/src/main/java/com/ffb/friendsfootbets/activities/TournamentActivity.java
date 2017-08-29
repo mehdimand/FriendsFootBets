@@ -7,29 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ffb.friendsfootbets.LoadFixtures2;
+import com.ffb.friendsfootbets.LoadSpecificFixtures;
 import com.ffb.friendsfootbets.R;
 import com.ffb.friendsfootbets.adapters.AddMatchAdapter;
-import com.ffb.friendsfootbets.adapters.MatchAdapter;
 import com.ffb.friendsfootbets.adapters.UserAdapter;
-import com.ffb.friendsfootbets.adapters.UserBetsAdapter;
 import com.ffb.friendsfootbets.adapters.UserPointsAdapter;
 import com.ffb.friendsfootbets.databaselink.LoadUsersList;
-import com.ffb.friendsfootbets.databaselink.SaveTournament;
 import com.ffb.friendsfootbets.databaselink.SaveUser;
 import com.ffb.friendsfootbets.models.Match;
 import com.ffb.friendsfootbets.models.Tournament;
 import com.ffb.friendsfootbets.models.User;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -105,15 +99,15 @@ public class TournamentActivity extends AppCompatActivity {
         loadUsersList.loadUsers(currentTournament.getUserArray(), true);
 
         // Matches
-        LoadFixtures2 loadFixtures2 = new LoadFixtures2();
-        loadFixtures2.setLoadFixtures2Listener(new LoadFixtures2.LoadFixtures2Listener() {
+        LoadSpecificFixtures loadFixtures = new LoadSpecificFixtures();
+        loadFixtures.setLoadFixturesListener(new LoadSpecificFixtures.LoadFixturesListener() {
             @Override
-            public void onFixtures2Loaded(HashMap<String, Match> fixtures_list) {
+            public void onFixturesLoaded(HashMap<String, Match> fixtures_list) {
                 matchMap = fixtures_list;
                 onUserOrMatchesLoaded();
             }
         });
-        loadFixtures2.loadFixtures2(currentTournament.getMatchArray());
+        loadFixtures.loadFixtures(currentTournament.getMatchArray());
 
         // Setting the text views
         tournamentNameView.setText(currentTournament.getTournamentName());
@@ -327,7 +321,7 @@ public class TournamentActivity extends AppCompatActivity {
                 startActivity(addUserIntent);
                 break;
             case R.id.add_match_button:
-                Intent addMatchIntent = new Intent(this, AddMatchToTournament.class);
+                Intent addMatchIntent = new Intent(this, ChooseCompetitionActivity.class);
                 addMatchIntent.putExtra("tournament", currentTournament);
                 addMatchIntent.putExtra("user", currentUser);
                 startActivity(addMatchIntent);
